@@ -39,10 +39,28 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+### Database Setup
+
+This app uses **PostgreSQL** for conversation persistence via [Prisma ORM](https://www.prisma.io/).
+
+```bash
+# Push the Prisma schema to your database (creates tables)
+npm run db:push
+
+# Or use migrations for production workflows
+npm run db:migrate
+
+# Open Prisma Studio to browse your data
+npm run db:studio
+```
+
+> Make sure your `DATABASE_URL` is set in `.env.local` before running these commands.
+
 ### Environment Variables
 
 | Variable | Description | Required |
 |---|---|---|
+| `DATABASE_URL` | PostgreSQL connection string | Yes |
 | `OPENAI_API_KEY` | OpenAI API key for GPT models | At least one |
 | `ANTHROPIC_API_KEY` | Anthropic API key for Claude models | At least one |
 | `GOOGLE_GENERATIVE_AI_API_KEY` | Google AI API key for Gemini models | At least one |
@@ -67,15 +85,21 @@ You need **at least one** API key configured for the app to work. Providers with
 - **AI SDK**: [Vercel AI SDK](https://sdk.vercel.ai/)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Markdown**: [react-markdown](https://github.com/remarkjs/react-markdown) + [remark-gfm](https://github.com/remarkjs/remark-gfm)
+- **Database**: [PostgreSQL](https://www.postgresql.org/) via [Prisma ORM](https://www.prisma.io/)
 - **Syntax Highlighting**: [react-syntax-highlighter](https://github.com/react-syntax-highlighter/react-syntax-highlighter)
 
 ## Project Structure
 
 ```
+prisma/
+└── schema.prisma               # Database schema (Conversation, Message models)
 src/
 ├── app/
 │   ├── api/
 │   │   ├── chat/route.ts       # Chat streaming endpoint
+│   │   ├── conversations/      # Conversation CRUD API routes
+│   │   │   ├── route.ts        # GET (list) / POST (create)
+│   │   │   └── [id]/route.ts   # GET / PUT / DELETE by ID
 │   │   └── models/route.ts     # Available models endpoint
 │   ├── globals.css             # Global styles & CSS variables
 │   ├── layout.tsx              # Root layout with theme support
@@ -88,8 +112,9 @@ src/
 │   ├── Sidebar.tsx             # Conversation list
 │   └── ThemeToggle.tsx         # Dark/light mode toggle
 ├── lib/
+│   ├── db.ts                   # Prisma client singleton
 │   ├── providers.ts            # AI provider configuration
-│   └── conversations.ts        # Conversation storage logic
+│   └── conversations.ts        # Conversation API client
 └── types/
     └── index.ts                # TypeScript type definitions
 ```
