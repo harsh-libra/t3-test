@@ -38,26 +38,33 @@ function ToastItem({
   }, [toast.id, toast.duration, onRemove]);
 
   const icons = {
-    error: <AlertCircle size={18} className="text-red-500" />,
-    success: <CheckCircle size={18} className="text-green-500" />,
-    info: <Info size={18} className="text-blue-500" />,
+    error: <AlertCircle size={20} className="text-red-500 flex-shrink-0" />,
+    success: <CheckCircle size={20} className="text-green-500 flex-shrink-0" />,
+    info: <Info size={20} className="text-blue-500 flex-shrink-0" />,
   };
 
   const borderColors = {
-    error: "border-red-500/30",
-    success: "border-green-500/30",
-    info: "border-blue-500/30",
+    error: "border-red-500/40",
+    success: "border-green-500/40",
+    info: "border-blue-500/40",
+  };
+
+  const accentBg = {
+    error: "border-l-red-500",
+    success: "border-l-green-500",
+    info: "border-l-blue-500",
   };
 
   return (
     <div
-      className={`flex items-center gap-3 px-4 py-3 rounded-xl border ${borderColors[toast.type]} bg-[var(--card)] text-[var(--card-foreground)] shadow-lg animate-in slide-in-from-right fade-in duration-300`}
+      className={`flex items-center gap-3 px-5 py-4 rounded-xl border ${borderColors[toast.type]} border-l-[3px] ${accentBg[toast.type]} bg-[var(--card)] text-[var(--card-foreground)] animate-in slide-in-from-right fade-in duration-300`}
+      style={{ boxShadow: "var(--shadow-lg)" }}
     >
       {icons[toast.type]}
-      <p className="text-sm flex-1">{toast.message}</p>
+      <p className="text-sm flex-1 leading-relaxed">{toast.message}</p>
       <button
         onClick={() => onRemove(toast.id)}
-        className="p-1 rounded-lg hover:bg-[var(--muted)] transition-colors text-[var(--muted-foreground)]"
+        className="p-1.5 rounded-lg hover:bg-[var(--muted)] transition-colors text-[var(--muted-foreground)] flex-shrink-0"
       >
         <X size={14} />
       </button>
@@ -81,7 +88,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     <ToastContext.Provider value={{ addToast }}>
       {children}
       {/* Toast container */}
-      <div className="fixed bottom-4 right-4 z-[100] flex flex-col gap-2 max-w-sm">
+      <div className="fixed bottom-4 right-4 z-[100] flex flex-col gap-2.5 max-w-md">
         {toasts.map((toast) => (
           <ToastItem key={toast.id} toast={toast} onRemove={removeToast} />
         ))}

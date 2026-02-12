@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import { Sun, Moon, Monitor } from "lucide-react";
+import { Sun, Moon, Monitor, Check } from "lucide-react";
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -27,7 +27,7 @@ export default function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="w-9 h-9 rounded-lg bg-[var(--muted)] animate-pulse" />
+      <div className="w-10 h-10 rounded-lg bg-[var(--muted)] animate-pulse" />
     );
   }
 
@@ -44,15 +44,18 @@ export default function ThemeToggle() {
     <div className="relative" data-theme-toggle>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors"
+        className="p-2.5 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors"
         aria-label="Toggle theme"
       >
         {React.createElement(currentIcon, { size: 18 })}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-36 rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-lg z-50 overflow-hidden">
-          <div className="p-1">
+        <div
+          className="absolute right-0 top-full mt-2 w-40 rounded-xl border border-[var(--border)] bg-[var(--card)] z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
+          style={{ boxShadow: "var(--shadow-lg)" }}
+        >
+          <div className="p-1.5">
             {options.map((option) => (
               <button
                 key={option.value}
@@ -60,14 +63,17 @@ export default function ThemeToggle() {
                   setTheme(option.value);
                   setIsOpen(false);
                 }}
-                className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
+                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-sm transition-all ${
                   theme === option.value
                     ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
                     : "text-[var(--card-foreground)] hover:bg-[var(--muted)]"
                 }`}
               >
                 {React.createElement(option.icon, { size: 16 })}
-                {option.label}
+                <span className="flex-1 text-left">{option.label}</span>
+                {theme === option.value && (
+                  <Check size={14} className="text-[var(--primary)]" />
+                )}
               </button>
             ))}
           </div>

@@ -50,10 +50,13 @@ export default function ChatInput({
   };
 
   return (
-    <div className="border-t border-[var(--border)] bg-[var(--background)] p-4">
+    <div
+      className="border-t border-[var(--border)] bg-[var(--background)] px-4 py-5 md:px-6"
+      style={{ boxShadow: "0 -1px 3px rgba(0,0,0,0.04)" }}
+    >
       <form
         onSubmit={onSubmit}
-        className="max-w-3xl mx-auto flex items-end gap-3"
+        className="max-w-[48rem] mx-auto flex items-end gap-3.5"
       >
         <div className="flex-1 relative">
           <textarea
@@ -64,8 +67,12 @@ export default function ChatInput({
             placeholder={placeholder}
             rows={1}
             disabled={isLoading}
-            className="w-full resize-none rounded-xl border border-[var(--input-border)] bg-[var(--input-bg)] px-4 py-3 pr-4 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ minHeight: "48px", maxHeight: "200px" }}
+            className="w-full resize-none rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-5 py-3.5 pr-5 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{
+              minHeight: "52px",
+              maxHeight: "200px",
+              boxShadow: "var(--shadow-sm)",
+            }}
           />
         </div>
 
@@ -73,7 +80,7 @@ export default function ChatInput({
           <button
             type="button"
             onClick={onStop}
-            className="flex-shrink-0 p-3 rounded-xl bg-[var(--destructive)] text-white hover:opacity-90 transition-opacity"
+            className="flex-shrink-0 p-3.5 rounded-2xl bg-[var(--destructive)] text-white hover:opacity-90 transition-opacity"
             aria-label="Stop generating"
           >
             <Square size={20} />
@@ -82,7 +89,12 @@ export default function ChatInput({
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="flex-shrink-0 p-3 rounded-xl bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex-shrink-0 p-3.5 rounded-2xl bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            style={{
+              boxShadow: input.trim()
+                ? "0 2px 8px rgba(79, 70, 229, 0.2)"
+                : "none",
+            }}
             aria-label="Send message"
           >
             <Send size={20} />
@@ -90,8 +102,8 @@ export default function ChatInput({
         )}
       </form>
 
-      <p className="text-center text-xs text-[var(--muted-foreground)] mt-2 max-w-3xl mx-auto">
-        Press Enter to send, Shift+Enter for new line
+      <p className="text-center text-[0.6875rem] text-[var(--muted-foreground)] mt-3 max-w-[48rem] mx-auto opacity-75 tracking-wide">
+        Press Enter to send · Shift+Enter for new line
       </p>
     </div>
   );

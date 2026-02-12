@@ -30,56 +30,118 @@
   --color-input-border: var(--input-border);
 }
 
+/* ─── Type Scale ─── */
 :root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-  --muted: #f5f5f5;
-  --muted-foreground: #737373;
-  --border: #e5e5e5;
-  --card: #ffffff;
-  --card-foreground: #0a0a0a;
-  --primary: #6366f1;
-  --primary-foreground: #ffffff;
-  --accent: #f0f0ff;
-  --accent-foreground: #4f46e5;
-  --destructive: #ef4444;
-  --ring: #6366f1;
-  --sidebar-bg: #fafafa;
-  --sidebar-border: #e5e5e5;
-  --user-bubble: #6366f1;
-  --user-bubble-text: #ffffff;
-  --assistant-bubble: #f5f5f5;
-  --assistant-bubble-text: #171717;
-  --input-bg: #ffffff;
-  --input-border: #d4d4d4;
-  --scrollbar-thumb: #d4d4d4;
-  --scrollbar-track: transparent;
+  --font-xs: 0.75rem;
+  --font-sm: 0.8125rem;
+  --font-base: 0.875rem;
+  --font-lg: 1rem;
+  --font-xl: 1.25rem;
+  --font-2xl: 1.5rem;
 }
 
+/* ─── Light Theme ─── */
+:root {
+  /* Backgrounds */
+  --background: #fafbfc;
+  --foreground: #111827;
+  --muted: #f1f3f5;
+  --muted-foreground: #6b7280;
+  --border: #e5e7eb;
+  --card: #ffffff;
+  --card-foreground: #111827;
+
+  /* Primary — refined indigo */
+  --primary: #4f46e5;
+  --primary-foreground: #ffffff;
+
+  /* Accent — richer active-state feel */
+  --accent: #eef2ff;
+  --accent-foreground: #3730a3;
+
+  /* Destructive */
+  --destructive: #ef4444;
+
+  /* Ring */
+  --ring: #4f46e5;
+
+  /* Sidebar — warm, differentiated from main bg */
+  --sidebar-bg: #f3f4f6;
+  --sidebar-border: #e5e7eb;
+
+  /* Chat bubbles */
+  --user-bubble: #4f46e5;
+  --user-bubble-text: #ffffff;
+  --assistant-bubble: #f8f9fb;
+  --assistant-bubble-text: #1f2937;
+
+  /* Input */
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+
+  /* Scrollbar */
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-track: transparent;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+
+  /* Gradient */
+  --gradient-primary: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #818cf8 100%);
+}
+
+/* ─── Dark Theme ─── */
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --muted: #1a1a1a;
-  --muted-foreground: #a3a3a3;
-  --border: #262626;
-  --card: #141414;
-  --card-foreground: #ededed;
+  /* Backgrounds — softer, with blue undertones */
+  --background: #12121a;
+  --foreground: #f0f0f4;
+  --muted: #1e1e2a;
+  --muted-foreground: #9ca3b0;
+  --border: #2a2a3a;
+  --card: #1a1a26;
+  --card-foreground: #f0f0f4;
+
+  /* Primary — brighter for dark bg */
   --primary: #818cf8;
   --primary-foreground: #ffffff;
-  --accent: #1e1b4b;
+
+  /* Accent — deep indigo */
+  --accent: #252540;
   --accent-foreground: #a5b4fc;
+
+  /* Destructive */
   --destructive: #dc2626;
+
+  /* Ring */
   --ring: #818cf8;
-  --sidebar-bg: #0f0f0f;
-  --sidebar-border: #262626;
+
+  /* Sidebar — subtle distinction from main bg */
+  --sidebar-bg: #151520;
+  --sidebar-border: #2a2a3a;
+
+  /* Chat bubbles */
   --user-bubble: #6366f1;
   --user-bubble-text: #ffffff;
-  --assistant-bubble: #1a1a1a;
-  --assistant-bubble-text: #e5e5e5;
-  --input-bg: #141414;
-  --input-border: #333333;
-  --scrollbar-thumb: #404040;
+  --assistant-bubble: #1e1e2c;
+  --assistant-bubble-text: #e5e5ec;
+
+  /* Input */
+  --input-bg: #1a1a26;
+  --input-border: #363646;
+
+  /* Scrollbar */
+  --scrollbar-thumb: #3f3f50;
   --scrollbar-track: transparent;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.35), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+
+  /* Gradient */
+  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #818cf8 50%, #a5b4fc 100%);
 }
 
 /* Removed custom * { padding: 0; margin: 0; } reset — Tailwind v4's Preflight 
@@ -96,12 +158,14 @@ body {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
+/* ─── Custom Scrollbar ─── */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -119,7 +183,7 @@ body {
   background: var(--muted-foreground);
 }
 
-/* Markdown content styling */
+/* ─── Markdown / Prose Styling ─── */
 .prose pre {
   background: var(--muted) !important;
   border: 1px solid var(--border);
@@ -130,13 +194,13 @@ body {
 }
 
 .prose code {
-  font-size: 0.875rem;
-  font-family: "Fira Code", "JetBrains Mono", monospace;
+  font-size: 0.8125rem;
+  font-family: var(--font-mono), "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 .prose p {
   margin: 0.5rem 0;
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
 .prose ul, .prose ol {
@@ -148,22 +212,42 @@ body {
   margin: 0.25rem 0;
 }
 
-.prose h1, .prose h2, .prose h3 {
+.prose h1 {
+  font-size: 1.5rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.625rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.prose h2 {
+  font-size: 1.25rem;
+  margin-top: 1.125rem;
+  margin-bottom: 0.5rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.prose h3 {
+  font-size: 1.1rem;
   margin-top: 1rem;
   margin-bottom: 0.5rem;
   font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 .prose a {
   color: var(--primary);
   text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .prose blockquote {
-  border-left: 3px solid var(--border);
+  border-left: 3px solid var(--primary);
   padding-left: 1rem;
   color: var(--muted-foreground);
   margin: 0.75rem 0;
+  font-style: italic;
 }
 
 .prose table {
@@ -183,7 +267,7 @@ body {
   font-weight: 600;
 }
 
-/* Smooth transitions */
+/* ─── Smooth Transitions ─── */
 .transition-theme {
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }

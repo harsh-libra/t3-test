@@ -82,7 +82,8 @@ export default function ModelSelector({
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--card-foreground)] hover:bg-[var(--muted)] transition-colors text-sm font-medium"
+        className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--card-foreground)] hover:bg-[var(--muted)] transition-all text-sm font-medium"
+        style={{ boxShadow: "var(--shadow-sm)" }}
         disabled={loading}
       >
         {currentProvider && (
@@ -91,21 +92,24 @@ export default function ModelSelector({
         <span className="truncate max-w-[200px]">{displayName}</span>
         <ChevronDown
           size={16}
-          className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`transition-transform text-[var(--muted-foreground)] ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 w-72 rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-lg z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="p-2">
-            {providers.map((provider) => (
+        <div
+          className="absolute top-full left-0 mt-2 w-80 rounded-xl border border-[var(--border)] bg-[var(--card)] z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
+          style={{ boxShadow: "var(--shadow-lg)" }}
+        >
+          <div className="p-2.5">
+            {providers.map((provider, providerIndex) => (
               <div key={provider.id}>
                 {/* Provider header */}
-                <div className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-[var(--muted-foreground)] uppercase tracking-wider">
+                <div className="flex items-center gap-2 px-3 py-2.5 text-xs font-semibold text-[var(--muted-foreground)] uppercase tracking-wider">
                   <ProviderIcon providerId={provider.id} />
                   {provider.name}
                   {!provider.available && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[var(--muted)] normal-case tracking-normal font-medium">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--muted)] border border-[var(--border)] normal-case tracking-normal font-medium text-[var(--muted-foreground)]">
                       No API Key
                     </span>
                   )}
@@ -128,7 +132,7 @@ export default function ModelSelector({
                         }
                       }}
                       disabled={isDisabled}
-                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-colors ${
+                      className={`w-full flex items-center justify-between px-3 py-3 rounded-lg text-left transition-all mb-0.5 ${
                         isDisabled
                           ? "opacity-40 cursor-not-allowed"
                           : isSelected
@@ -136,25 +140,29 @@ export default function ModelSelector({
                             : "hover:bg-[var(--muted)] text-[var(--card-foreground)]"
                       }`}
                     >
-                      <div className="flex flex-col">
+                      <div className="flex flex-col gap-0.5">
                         <span className="text-sm font-medium">
                           {model.name}
                         </span>
                         {model.description && (
-                          <span className="text-xs text-[var(--muted-foreground)]">
+                          <span className="text-xs text-[var(--muted-foreground)] leading-snug">
                             {model.description}
                           </span>
                         )}
                       </div>
                       {isSelected && (
-                        <Check size={16} className="text-[var(--primary)]" />
+                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[var(--primary)] flex items-center justify-center">
+                          <Check size={12} className="text-white" />
+                        </div>
                       )}
                     </button>
                   );
                 })}
 
-                {/* Divider between providers */}
-                <div className="mx-3 my-1 border-t border-[var(--border)]" />
+                {/* Divider between providers — not after the last one */}
+                {providerIndex < providers.length - 1 && (
+                  <div className="mx-3 my-1.5 border-t border-[var(--border)]/60" />
+                )}
               </div>
             ))}
           </div>
