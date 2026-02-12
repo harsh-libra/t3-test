@@ -5,7 +5,7 @@ import { useChat } from "@ai-sdk/react";
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 import ModelSelector from "./ModelSelector";
-import { MessageSquarePlus, Loader2, Menu } from "lucide-react";
+import { MessageSquarePlus, Loader2, Menu, AlertTriangle } from "lucide-react";
 import type { Conversation } from "@/types";
 
 interface ChatWindowProps {
@@ -127,8 +127,11 @@ export default function ChatWindow({
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background">
-        <div className="flex items-center gap-3">
+      <div
+        className="flex items-center justify-between px-5 md:px-6 py-3.5 border-b border-border bg-background"
+        style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}
+      >
+        <div className="flex items-center gap-4">
           {/* Sidebar toggle for desktop */}
           <button
             onClick={onToggleSidebar}
@@ -145,7 +148,7 @@ export default function ChatWindow({
         </div>
         <button
           onClick={onNewChat}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted border border-transparent hover:border-border transition-all"
           aria-label="New chat"
         >
           <MessageSquarePlus size={18} />
@@ -157,17 +160,25 @@ export default function ChatWindow({
       <div ref={scrollContainerRef} className="flex-1 overflow-y-auto">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center px-4">
-            <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center mb-4">
-              <MessageSquarePlus size={32} className="text-white" />
+            <div
+              className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 relative"
+              style={{ background: "var(--gradient-primary)" }}
+            >
+              {/* Soft glow behind icon */}
+              <div
+                className="absolute inset-0 rounded-2xl opacity-30 blur-xl"
+                style={{ background: "var(--gradient-primary)" }}
+              />
+              <MessageSquarePlus size={38} className="text-white relative z-10" />
             </div>
-            <h2 className="text-2xl font-bold text-foreground mb-2">
+            <h2 className="text-2xl font-bold text-foreground mb-3 tracking-tight">
               T3 Chat
             </h2>
-            <p className="text-muted-foreground max-w-md mb-6">
+            <p className="text-muted-foreground max-w-md mb-8 leading-relaxed">
               Start a conversation with any AI model. Select your preferred
               provider and model from the dropdown above.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-lg">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-lg">
               {[
                 { text: "Explain quantum computing", icon: "🔬" },
                 { text: "Write a Python script", icon: "🐍" },
@@ -178,18 +189,19 @@ export default function ChatWindow({
                   onClick={() => {
                     setInput(suggestion.text);
                   }}
-                  className="p-3 rounded-xl border border-border bg-card text-card-foreground hover:bg-muted transition-colors text-sm text-left"
+                  className="p-4 rounded-xl border border-border bg-card text-card-foreground hover:bg-muted transition-all text-sm text-left hover:border-[var(--primary)]/30"
+                  style={{ boxShadow: "var(--shadow-sm)" }}
                 >
-                  <span className="text-lg mb-1 block">
+                  <span className="text-xl mb-2 block">
                     {suggestion.icon}
                   </span>
-                  {suggestion.text}
+                  <span className="font-medium">{suggestion.text}</span>
                 </button>
               ))}
             </div>
           </div>
         ) : (
-          <div className="max-w-3xl mx-auto py-4">
+          <div className="max-w-[48rem] mx-auto py-6">
             {messages.map((message, index) => (
               <MessageBubble
                 key={message.id}
@@ -205,19 +217,19 @@ export default function ChatWindow({
             {isLoading &&
               messages.length > 0 &&
               messages[messages.length - 1].role === "user" && (
-                <div className="flex gap-3 py-4 px-4 md:px-0">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-primary text-white mt-1">
+                <div className="flex gap-3.5 py-5 px-4 md:px-0">
+                  <div className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center bg-primary text-white mt-1">
                     <Loader2 size={18} className="animate-spin" />
                   </div>
-                  <div className="rounded-2xl rounded-bl-md bg-assistant-bubble px-4 py-3">
-                    <div className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-muted-foreground animate-bounce" />
+                  <div className="rounded-2xl rounded-bl-md bg-assistant-bubble px-5 py-3.5 border border-[var(--border)]/50">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-muted-foreground/60 animate-bounce" />
                       <span
-                        className="w-2 h-2 rounded-full bg-muted-foreground animate-bounce"
+                        className="w-2.5 h-2.5 rounded-full bg-muted-foreground/60 animate-bounce"
                         style={{ animationDelay: "0.1s" }}
                       />
                       <span
-                        className="w-2 h-2 rounded-full bg-muted-foreground animate-bounce"
+                        className="w-2.5 h-2.5 rounded-full bg-muted-foreground/60 animate-bounce"
                         style={{ animationDelay: "0.2s" }}
                       />
                     </div>
@@ -225,15 +237,23 @@ export default function ChatWindow({
                 </div>
               )}
             {error && (
-              <div className="mx-4 md:mx-0 p-4 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-sm">
-                <p className="font-medium">Error</p>
-                <p>
-                  {error.message ||
-                    "Something went wrong. Please try again."}
-                </p>
+              <div
+                className="mx-4 md:mx-0 p-5 rounded-2xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-sm"
+                style={{ boxShadow: "var(--shadow-sm)" }}
+              >
+                <div className="flex items-start gap-3">
+                  <AlertTriangle size={18} className="flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-semibold mb-1">Error</p>
+                    <p className="leading-relaxed">
+                      {error.message ||
+                        "Something went wrong. Please try again."}
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
-            <div ref={messagesEndRef} />
+            <div ref={messagesEndRef} className="h-4" />
           </div>
         )}
       </div>

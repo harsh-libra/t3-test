@@ -28,11 +28,11 @@ interface SidebarProps {
 function ProviderBadge({ providerId }: { providerId: string }) {
   switch (providerId) {
     case "openai":
-      return <Sparkles size={12} className="text-green-500" />;
+      return <Sparkles size={13} className="text-green-500 flex-shrink-0" />;
     case "anthropic":
-      return <Cpu size={12} className="text-orange-500" />;
+      return <Cpu size={13} className="text-orange-500 flex-shrink-0" />;
     case "google":
-      return <Zap size={12} className="text-blue-500" />;
+      return <Zap size={13} className="text-blue-500 flex-shrink-0" />;
     default:
       return null;
   }
@@ -69,7 +69,7 @@ export default function Sidebar({
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
           onClick={onToggle}
         />
       )}
@@ -77,7 +77,8 @@ export default function Sidebar({
       {/* Mobile hamburger button */}
       <button
         onClick={onToggle}
-        className="fixed top-3 left-3 z-50 p-2 rounded-lg bg-card border border-border text-foreground md:hidden shadow-md"
+        className="fixed top-3 left-3 z-50 p-2 rounded-lg bg-card border border-border text-foreground md:hidden"
+        style={{ boxShadow: "var(--shadow-md)" }}
         aria-label="Toggle sidebar"
       >
         {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -85,17 +86,23 @@ export default function Sidebar({
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:relative z-40 h-full flex flex-col bg-sidebar-bg border-r border-sidebar-border transition-all duration-300 ease-in-out ${
+        className={`fixed md:relative z-40 h-full flex flex-col bg-sidebar-bg border-r border-sidebar-border transition-all duration-300 ease-in-out transition-theme ${
           isOpen
-            ? "w-72 translate-x-0"
-            : "w-72 -translate-x-full md:w-0 md:translate-x-0 md:overflow-hidden"
+            ? "w-80 translate-x-0"
+            : "w-80 -translate-x-full md:w-0 md:translate-x-0 md:overflow-hidden"
         }`}
       >
-        <div className="flex flex-col h-full w-72">
+        <div className="flex flex-col h-full w-80">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-[var(--sidebar-border)]">
-            <h1 className="text-lg font-bold text-[var(--foreground)] flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-[var(--primary)] flex items-center justify-center">
+          <div
+            className="flex items-center justify-between px-5 py-4 border-b border-[var(--sidebar-border)]"
+            style={{ boxShadow: "var(--shadow-sm)" }}
+          >
+            <h1 className="text-lg font-bold text-[var(--foreground)] flex items-center gap-2.5 tracking-tight">
+              <div
+                className="w-8 h-8 rounded-lg flex items-center justify-center"
+                style={{ background: "var(--gradient-primary)" }}
+              >
                 <MessageSquare size={16} className="text-white" />
               </div>
               T3 Chat
@@ -113,19 +120,20 @@ export default function Sidebar({
           </div>
 
           {/* New Chat button */}
-          <div className="p-3">
+          <div className="px-4 py-3">
             <button
               onClick={() => {
                 onNewChat();
                 if (window.innerWidth < 768) onToggle();
               }}
-              className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition-opacity font-medium text-sm"
+              className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition-all font-medium text-sm"
+              style={{ boxShadow: "0 2px 8px rgba(79, 70, 229, 0.25)" }}
             >
               <span className="flex items-center gap-2">
                 <MessageSquarePlus size={18} />
                 New Chat
               </span>
-              <kbd className="hidden sm:inline text-xs opacity-70 bg-white/20 px-1.5 py-0.5 rounded">
+              <kbd className="hidden sm:inline text-xs opacity-80 bg-white/20 px-2 py-0.5 rounded-md font-mono">
                 ⌘K
               </kbd>
             </button>
@@ -134,16 +142,16 @@ export default function Sidebar({
           {/* Conversation list */}
           <div className="flex-1 overflow-y-auto px-3 pb-3">
             {conversations.length === 0 ? (
-              <div className="text-center py-8 text-[var(--muted-foreground)] text-sm">
+              <div className="text-center py-10 text-[var(--muted-foreground)] text-sm">
                 <MessageSquare
-                  size={32}
-                  className="mx-auto mb-2 opacity-50"
+                  size={36}
+                  className="mx-auto mb-3 opacity-40"
                 />
-                <p>No conversations yet</p>
-                <p className="text-xs mt-1">Start a new chat to begin</p>
+                <p className="font-medium">No conversations yet</p>
+                <p className="text-xs mt-1.5 opacity-75">Start a new chat to begin</p>
               </div>
             ) : (
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 {conversations.map((conv) => {
                   const isActive = conv.id === currentConversationId;
                   const isHovered = conv.id === hoveredId;
@@ -151,10 +159,10 @@ export default function Sidebar({
                   return (
                     <div
                       key={conv.id}
-                      className={`group relative flex items-center rounded-xl cursor-pointer transition-colors ${
+                      className={`group relative flex items-center rounded-xl cursor-pointer transition-all ${
                         isActive
-                          ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
-                          : "hover:bg-[var(--muted)] text-[var(--foreground)]"
+                          ? "bg-[var(--accent)] text-[var(--accent-foreground)] border-l-2 border-l-[var(--primary)]"
+                          : "hover:bg-[var(--muted)] text-[var(--foreground)] border-l-2 border-l-transparent"
                       }`}
                       onMouseEnter={() => setHoveredId(conv.id)}
                       onMouseLeave={() => setHoveredId(null)}
@@ -163,14 +171,14 @@ export default function Sidebar({
                         if (window.innerWidth < 768) onToggle();
                       }}
                     >
-                      <div className="flex-1 min-w-0 px-3 py-3">
+                      <div className="flex-1 min-w-0 px-3.5 py-3">
                         <div className="flex items-center gap-2">
                           <ProviderBadge providerId={conv.provider} />
                           <p className="text-sm font-medium truncate">
                             {conv.title}
                           </p>
                         </div>
-                        <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
+                        <p className="text-xs text-[var(--muted-foreground)] mt-1 tracking-wide">
                           {conv.messages.length} messages ·{" "}
                           {formatTimeAgo(conv.updatedAt)}
                         </p>
@@ -197,7 +205,7 @@ export default function Sidebar({
           </div>
 
           {/* Footer with shortcuts */}
-          <div className="p-3 border-t border-[var(--sidebar-border)]">
+          <div className="px-4 py-3.5 border-t border-[var(--sidebar-border)]">
             <button
               onClick={() => setShowShortcuts(!showShortcuts)}
               className="w-full flex items-center justify-center gap-2 text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors py-1"
@@ -206,28 +214,40 @@ export default function Sidebar({
               Keyboard shortcuts
             </button>
             {showShortcuts && (
-              <div className="mt-2 p-3 rounded-lg bg-[var(--muted)] text-xs space-y-1.5">
-                <div className="flex justify-between">
-                  <span>New chat</span>
-                  <kbd className="px-1.5 py-0.5 rounded bg-[var(--card)] border border-[var(--border)] font-mono">
+              <div className="mt-2.5 p-3.5 rounded-lg bg-[var(--muted)] text-xs space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="tracking-wide">New chat</span>
+                  <kbd
+                    className="px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)] font-mono text-[var(--muted-foreground)]"
+                    style={{ boxShadow: "var(--shadow-sm)" }}
+                  >
                     ⌘K
                   </kbd>
                 </div>
-                <div className="flex justify-between">
-                  <span>Toggle sidebar</span>
-                  <kbd className="px-1.5 py-0.5 rounded bg-[var(--card)] border border-[var(--border)] font-mono">
+                <div className="flex justify-between items-center">
+                  <span className="tracking-wide">Toggle sidebar</span>
+                  <kbd
+                    className="px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)] font-mono text-[var(--muted-foreground)]"
+                    style={{ boxShadow: "var(--shadow-sm)" }}
+                  >
                     ⌘B
                   </kbd>
                 </div>
-                <div className="flex justify-between">
-                  <span>Send message</span>
-                  <kbd className="px-1.5 py-0.5 rounded bg-[var(--card)] border border-[var(--border)] font-mono">
+                <div className="flex justify-between items-center">
+                  <span className="tracking-wide">Send message</span>
+                  <kbd
+                    className="px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)] font-mono text-[var(--muted-foreground)]"
+                    style={{ boxShadow: "var(--shadow-sm)" }}
+                  >
                     Enter
                   </kbd>
                 </div>
-                <div className="flex justify-between">
-                  <span>New line</span>
-                  <kbd className="px-1.5 py-0.5 rounded bg-[var(--card)] border border-[var(--border)] font-mono">
+                <div className="flex justify-between items-center">
+                  <span className="tracking-wide">New line</span>
+                  <kbd
+                    className="px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)] font-mono text-[var(--muted-foreground)]"
+                    style={{ boxShadow: "var(--shadow-sm)" }}
+                  >
                     ⇧Enter
                   </kbd>
                 </div>
