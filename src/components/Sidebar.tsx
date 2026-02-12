@@ -77,7 +77,7 @@ export default function Sidebar({
       {/* Mobile hamburger button */}
       <button
         onClick={onToggle}
-        className="fixed top-3 left-3 z-50 p-2 rounded-lg bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] md:hidden shadow-md"
+        className="fixed top-3 left-3 z-50 p-2 rounded-lg bg-card border border-border text-foreground md:hidden shadow-md"
         aria-label="Toggle sidebar"
       >
         {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -85,7 +85,7 @@ export default function Sidebar({
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:relative z-40 h-full flex flex-col bg-[var(--sidebar-bg)] border-r border-[var(--sidebar-border)] transition-all duration-300 ease-in-out ${
+        className={`fixed md:relative z-40 h-full flex flex-col bg-sidebar-bg border-r border-sidebar-border transition-all duration-300 ease-in-out ${
           isOpen
             ? "w-72 translate-x-0"
             : "w-72 -translate-x-full md:w-0 md:translate-x-0 md:overflow-hidden"

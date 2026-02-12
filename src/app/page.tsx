@@ -109,12 +109,12 @@ export default function Home() {
   // Avoid hydration mismatch — don't render until mounted
   if (!mounted) {
     return (
-      <main className="h-screen flex items-center justify-center bg-[var(--background)]">
+      <main className="h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-[var(--primary)] flex items-center justify-center animate-pulse">
+          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center animate-pulse">
             <span className="text-white text-lg font-bold">T3</span>
           </div>
-          <p className="text-[var(--muted-foreground)] text-sm animate-pulse">
+          <p className="text-muted-foreground text-sm animate-pulse">
             Loading T3 Chat...
           </p>
         </div>
@@ -123,7 +123,7 @@ export default function Home() {
   }
 
   return (
-    <main className="h-screen flex bg-[var(--background)] overflow-hidden">
+    <main className="h-screen flex bg-background overflow-hidden">
       {/* Keyboard shortcuts handler */}
       <KeyboardShortcuts
         onNewChat={handleNewChat}

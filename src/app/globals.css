@@ -1,6 +1,34 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:is(.dark *));
+@source "../components";
+@source "../app";
+@source "../lib";
+
+@custom-variant dark (&:is(.dark, .dark *));
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-ring: var(--ring);
+  --color-sidebar-bg: var(--sidebar-bg);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-user-bubble: var(--user-bubble);
+  --color-user-bubble-text: var(--user-bubble-text);
+  --color-assistant-bubble: var(--assistant-bubble);
+  --color-assistant-bubble-text: var(--assistant-bubble-text);
+  --color-input-bg: var(--input-bg);
+  --color-input-border: var(--input-border);
+}
 
 :root {
   --background: #ffffff;
@@ -54,11 +82,9 @@
   --scrollbar-track: transparent;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
+/* Removed custom * { padding: 0; margin: 0; } reset — Tailwind v4's Preflight 
+   already handles this inside @layer base. The un-layered version was overriding 
+   all Tailwind padding/margin utility classes due to CSS Cascade Layer specificity rules. */
 
 html,
 body {
