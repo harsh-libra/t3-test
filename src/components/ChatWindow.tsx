@@ -127,12 +127,12 @@ export default function ChatWindow({
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border)] bg-[var(--background)]">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background">
         <div className="flex items-center gap-3">
           {/* Sidebar toggle for desktop */}
           <button
             onClick={onToggleSidebar}
-            className="hidden md:flex p-2 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors"
+            className="hidden md:flex p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
             aria-label="Toggle sidebar"
           >
             <Menu size={18} />
@@ -145,7 +145,7 @@ export default function ChatWindow({
         </div>
         <button
           onClick={onNewChat}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors"
+          className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           aria-label="New chat"
         >
           <MessageSquarePlus size={18} />
@@ -157,13 +157,13 @@ export default function ChatWindow({
       <div ref={scrollContainerRef} className="flex-1 overflow-y-auto">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center px-4">
-            <div className="w-16 h-16 rounded-2xl bg-[var(--primary)] flex items-center justify-center mb-4">
+            <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center mb-4">
               <MessageSquarePlus size={32} className="text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-[var(--foreground)] mb-2">
+            <h2 className="text-2xl font-bold text-foreground mb-2">
               T3 Chat
             </h2>
-            <p className="text-[var(--muted-foreground)] max-w-md mb-6">
+            <p className="text-muted-foreground max-w-md mb-6">
               Start a conversation with any AI model. Select your preferred
               provider and model from the dropdown above.
             </p>
@@ -178,7 +178,7 @@ export default function ChatWindow({
                   onClick={() => {
                     setInput(suggestion.text);
                   }}
-                  className="p-3 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--card-foreground)] hover:bg-[var(--muted)] transition-colors text-sm text-left"
+                  className="p-3 rounded-xl border border-border bg-card text-card-foreground hover:bg-muted transition-colors text-sm text-left"
                 >
                   <span className="text-lg mb-1 block">
                     {suggestion.icon}
@@ -206,18 +206,18 @@ export default function ChatWindow({
               messages.length > 0 &&
               messages[messages.length - 1].role === "user" && (
                 <div className="flex gap-3 py-4 px-4 md:px-0">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-[var(--primary)] text-white mt-1">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-primary text-white mt-1">
                     <Loader2 size={18} className="animate-spin" />
                   </div>
-                  <div className="rounded-2xl rounded-bl-md bg-[var(--assistant-bubble)] px-4 py-3">
+                  <div className="rounded-2xl rounded-bl-md bg-assistant-bubble px-4 py-3">
                     <div className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-[var(--muted-foreground)] animate-bounce" />
+                      <span className="w-2 h-2 rounded-full bg-muted-foreground animate-bounce" />
                       <span
-                        className="w-2 h-2 rounded-full bg-[var(--muted-foreground)] animate-bounce"
+                        className="w-2 h-2 rounded-full bg-muted-foreground animate-bounce"
                         style={{ animationDelay: "0.1s" }}
                       />
                       <span
-                        className="w-2 h-2 rounded-full bg-[var(--muted-foreground)] animate-bounce"
+                        className="w-2 h-2 rounded-full bg-muted-foreground animate-bounce"
                         style={{ animationDelay: "0.2s" }}
                       />
                     </div>
