@@ -29,12 +29,15 @@ function CodeBlock({
   };
 
   return (
-    <div className="relative group my-3 rounded-lg overflow-hidden border border-[var(--border)]">
-      <div className="flex items-center justify-between px-4 py-2 text-xs bg-[var(--muted)] text-[var(--muted-foreground)] border-b border-[var(--border)]">
-        <span>{language || "text"}</span>
+    <div
+      className="relative group my-3 rounded-lg overflow-hidden border border-[var(--border)]"
+      style={{ boxShadow: "var(--shadow-sm)" }}
+    >
+      <div className="flex items-center justify-between px-4 py-2.5 text-xs bg-[var(--muted)] text-[var(--muted-foreground)] border-b border-[var(--border)]">
+        <span className="font-medium tracking-wide">{language || "text"}</span>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1 hover:text-[var(--foreground)] transition-colors"
+          className="flex items-center gap-1.5 hover:text-[var(--foreground)] transition-colors px-2 py-1 rounded-md hover:bg-[var(--background)]"
           aria-label="Copy code"
         >
           {copied ? (
@@ -56,7 +59,7 @@ function CodeBlock({
           margin: 0,
           borderRadius: 0,
           padding: "1rem",
-          fontSize: "0.875rem",
+          fontSize: "0.8125rem",
         }}
       >
         {children}
@@ -74,22 +77,26 @@ const MessageBubble = memo(function MessageBubble({
 
   return (
     <div
-      className={`flex gap-3 py-4 px-4 md:px-0 ${
+      className={`flex gap-3.5 py-5 px-4 md:px-0 ${
         isUser ? "justify-end" : "justify-start"
       }`}
     >
       {!isUser && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-[var(--primary)] text-white mt-1">
+        <div
+          className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center bg-[var(--primary)] text-white mt-1"
+          style={{ boxShadow: "0 2px 8px rgba(79, 70, 229, 0.3)" }}
+        >
           <Bot size={18} />
         </div>
       )}
 
       <div
-        className={`max-w-[85%] md:max-w-[75%] rounded-2xl px-4 py-3 ${
+        className={`max-w-[80%] md:max-w-[70%] rounded-2xl px-5 py-3.5 ${
           isUser
             ? "bg-[var(--user-bubble)] text-[var(--user-bubble-text)] rounded-br-md"
-            : "bg-[var(--assistant-bubble)] text-[var(--assistant-bubble-text)] rounded-bl-md"
+            : "bg-[var(--assistant-bubble)] text-[var(--assistant-bubble-text)] rounded-bl-md border border-[var(--border)]/50"
         }`}
+        style={isUser ? { boxShadow: "var(--shadow-sm)" } : {}}
       >
         {isUser ? (
           <p className="whitespace-pre-wrap leading-relaxed">{content}</p>
@@ -106,7 +113,7 @@ const MessageBubble = memo(function MessageBubble({
                   if (!match) {
                     return (
                       <code
-                        className="px-1.5 py-0.5 rounded bg-[var(--muted)] text-[var(--foreground)] text-sm font-mono"
+                        className="px-2 py-1 rounded-md bg-[var(--muted)] text-[var(--foreground)] text-[0.8125rem] font-mono border border-[var(--border)]/40"
                         {...props}
                       >
                         {children}
@@ -132,7 +139,7 @@ const MessageBubble = memo(function MessageBubble({
       </div>
 
       {isUser && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-[var(--muted)] text-[var(--foreground)] mt-1">
+        <div className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center bg-[var(--muted)] text-[var(--foreground)] mt-1 ring-1 ring-[var(--border)]">
           <User size={18} />
         </div>
       )}
