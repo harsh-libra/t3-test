@@ -1,4 +1,4 @@
-import { streamText } from "ai";
+import { convertToCoreMessages, streamText } from "ai";
 import { z } from "zod";
 import { getLanguageModel } from "@/lib/providers";
 
@@ -12,6 +12,15 @@ const ChatRequestSchema = z.object({
     z.object({
       role: z.enum(["user", "assistant", "system"]),
       content: z.string(),
+      experimental_attachments: z
+        .array(
+          z.object({
+            name: z.string(),
+            contentType: z.string(),
+            url: z.string(),
+          })
+        )
+        .optional(),
     })
   ),
   provider: z.string().min(1, "Provider is required"),
@@ -50,9 +59,11 @@ export async function POST(req: Request) {
     }
 
     // Stream the response using Vercel AI SDK
+    // convertToCoreMessages handles experimental_attachments, converting
+    // data URLs into proper multi-modal content parts (image/file) for providers
     const result = streamText({
       model: languageModel,
-      messages,
+      messages: convertToCoreMessages(messages),
       maxTokens: 4096,
     });
 

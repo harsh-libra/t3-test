@@ -67,6 +67,7 @@ export default function ChatWindow({
     error,
   } = useChat({
     api: "/api/chat",
+    sendExtraMessageFields: true,
     body: {
       provider: selectedProvider,
       model: selectedModel,
@@ -211,6 +212,9 @@ export default function ChatWindow({
                   isLoading &&
                   index === messages.length - 1 &&
                   message.role === "assistant"
+                }
+                experimental_attachments={
+                  (message as any).experimental_attachments
                 }
               />
             ))}
