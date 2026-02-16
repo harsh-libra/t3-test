@@ -1,17 +1,9 @@
 "use client";
 
-import React from "react";
-import {
-  Plus,
-  Trash2,
-  MessageSquare,
-  X,
-  Menu,
-  Sparkles,
-  Cpu,
-  Zap,
-} from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { Plus, Trash2, X, Menu, Search } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+import { searchConversations, type FuseResultMatch } from "@/lib/search";
 import type { Conversation } from "@/types";
 
 interface SidebarProps {
@@ -22,33 +14,44 @@ interface SidebarProps {
   onDeleteConversation: (id: string) => void;
   isOpen: boolean;
   onToggle: () => void;
+  searchInputRef?: React.RefObject<HTMLInputElement | null>;
 }
 
-function ProviderBadge({ providerId }: { providerId: string }) {
-  switch (providerId) {
-    case "openai":
-      return <Sparkles size={12} className="text-green-500 flex-shrink-0" />;
-    case "anthropic":
-      return <Cpu size={12} className="text-orange-500 flex-shrink-0" />;
-    case "google":
-      return <Zap size={12} className="text-blue-500 flex-shrink-0" />;
-    default:
-      return null;
+function HighlightedText({
+  text,
+  matches,
+}: {
+  text: string;
+  matches?: readonly FuseResultMatch[];
+}) {
+  if (!matches || matches.length === 0) return <>{text}</>;
+
+  const titleMatch = matches.find((m) => m.key === "title");
+  if (!titleMatch || !titleMatch.indices) return <>{text}</>;
+
+  const indices = [...titleMatch.indices].sort((a, b) => a[0] - b[0]);
+  let lastIndex = 0;
+  const parts: React.ReactNode[] = [];
+
+  for (const [start, end] of indices) {
+    if (start > lastIndex) {
+      parts.push(text.slice(lastIndex, start));
+    }
+    parts.push(
+      <span
+        key={start}
+        className="bg-[var(--accent)] text-[var(--accent-foreground)] rounded-sm px-0.5"
+      >
+        {text.slice(start, end + 1)}
+      </span>
+    );
+    lastIndex = end + 1;
   }
-}
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
 
-function formatTimeAgo(timestamp: number): string {
-  const now = Date.now();
-  const diff = now - timestamp;
-  const minutes = Math.floor(diff / 60000);
-  const hours = Math.floor(diff / 3600000);
-  const days = Math.floor(diff / 86400000);
-
-  if (minutes < 1) return "Just now";
-  if (minutes < 60) return `${minutes}m ago`;
-  if (hours < 24) return `${hours}h ago`;
-  if (days < 7) return `${days}d ago`;
-  return new Date(timestamp).toLocaleDateString();
+  return <>{parts}</>;
 }
 
 export default function Sidebar({
@@ -59,14 +62,32 @@ export default function Sidebar({
   onDeleteConversation,
   isOpen,
   onToggle,
+  searchInputRef,
 }: SidebarProps) {
+  const [searchQuery, setSearchQuery] = useState("");
 
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim()) return null;
+    return searchConversations(conversations, searchQuery);
+  }, [conversations, searchQuery]);
+
+  const displayedConversations = searchResults
+    ? searchResults.map((r) => r.item)
+    : conversations;
+
+  const matchMap = useMemo(
+    () =>
+      new Map(
+        searchResults?.map((r) => [r.item.id, r.matches]) ?? []
+      ),
+    [searchResults]
+  );
   return (
     <>
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
+          className="fixed inset-0 bg-black/30 z-40 md:hidden backdrop-blur-sm"
           onClick={onToggle}
         />
       )}
@@ -74,8 +95,7 @@ export default function Sidebar({
       {/* Mobile hamburger button */}
       <button
         onClick={onToggle}
-        className="fixed top-3 left-3 z-50 p-2 rounded-lg bg-card border border-border text-foreground md:hidden"
-        style={{ boxShadow: "var(--shadow-md)" }}
+        className="fixed top-3 left-3 z-50 p-1.5 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors md:hidden"
         aria-label="Toggle sidebar"
       >
         {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -83,7 +103,7 @@ export default function Sidebar({
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:relative z-40 h-full flex flex-col bg-sidebar-bg border-r border-sidebar-border transition-all duration-300 ease-in-out transition-theme ${
+        className={`fixed md:relative z-40 h-full flex flex-col bg-sidebar-bg border-r border-sidebar-border transition-all duration-300 ease-in-out will-change-transform transition-theme ${
           isOpen
             ? "w-64 translate-x-0"
             : "w-64 -translate-x-full md:w-0 md:translate-x-0 md:overflow-hidden"
@@ -91,81 +111,110 @@ export default function Sidebar({
       >
         <div className="flex flex-col h-full w-64">
           {/* Header */}
-          <div className="flex items-center justify-between px-3.5 py-3 border-b border-[var(--sidebar-border)]">
-            <h1 className="text-sm font-semibold text-[var(--foreground)] tracking-tight">
+          <div className="flex items-center justify-between px-4 py-3">
+            <h1 className="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
               T3 Chat
             </h1>
-            <div className="flex items-center gap-1">
-              <ThemeToggle />
+            <div className="flex items-center gap-0.5">
+              <button
+                onClick={() => {
+                  onNewChat();
+                  if (window.innerWidth < 768) onToggle();
+                }}
+                className="p-1.5 rounded-md text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors"
+                aria-label="New chat"
+              >
+                <Plus size={16} />
+              </button>
               <button
                 onClick={onToggle}
-                className="p-1.5 rounded-lg hover:bg-[var(--muted)] text-[var(--muted-foreground)] transition-colors md:hidden"
+                className="p-1.5 rounded-md text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors md:hidden"
                 aria-label="Close sidebar"
               >
-                <X size={18} />
+                <X size={16} />
               </button>
             </div>
           </div>
 
-          {/* New Chat button */}
-          <div className="px-3 py-2">
-            <button
-              onClick={() => {
-                onNewChat();
-                if (window.innerWidth < 768) onToggle();
-              }}
-              className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--muted)] transition-all text-sm font-medium"
-            >
-              <span className="flex items-center gap-2">
-                <Plus size={16} />
-                New Chat
-              </span>
-              <kbd className="hidden sm:inline text-[10px] text-[var(--muted-foreground)] bg-[var(--muted)] px-1.5 py-0.5 rounded font-mono">
-                ⌘K
-              </kbd>
-            </button>
+          {/* Search input */}
+          <div className="px-3 pb-2">
+            <div className="relative">
+              <Search
+                size={14}
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] pointer-events-none"
+              />
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") {
+                    setSearchQuery("");
+                    (e.target as HTMLInputElement).blur();
+                  }
+                }}
+                placeholder="Search chats..."
+                className="w-full pl-8 pr-8 py-1.5 text-sm rounded-md border border-[var(--sidebar-border)] bg-[var(--sidebar-bg)] text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-1 focus:ring-[var(--ring)] transition-colors"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+                  aria-label="Clear search"
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Conversation list */}
-          <div className="flex-1 overflow-y-auto px-2.5 pb-2.5">
-            {conversations.length === 0 ? (
-              <div className="text-center py-8 text-[var(--muted-foreground)] text-sm">
-                <MessageSquare
-                  size={28}
-                  className="mx-auto mb-2.5 opacity-40"
-                />
-                <p className="font-medium">No conversations yet</p>
-                <p className="text-xs mt-1.5 opacity-75">Start a new chat to begin</p>
+          <div className="flex-1 overflow-y-auto px-2 pb-2 sidebar-scroll">
+            {displayedConversations.length === 0 && searchQuery.trim() ? (
+              <div className="text-center py-12 px-4">
+                <p className="text-sm text-[var(--muted-foreground)]">
+                  No matching chats
+                </p>
+              </div>
+            ) : conversations.length === 0 ? (
+              <div className="text-center py-12 px-4">
+                <p className="text-sm text-[var(--muted-foreground)]">
+                  No conversations
+                </p>
               </div>
             ) : (
-              <div className="space-y-0.5">
-                {conversations.map((conv) => {
+              <div className="space-y-px">
+                {displayedConversations.map((conv) => {
                   const isActive = conv.id === currentConversationId;
+                  const matches = matchMap.get(conv.id);
 
                   return (
                     <div
                       key={conv.id}
-                      className={`group relative flex items-center rounded-lg cursor-pointer transition-colors ${
+                      className={`group flex items-center rounded-md cursor-pointer transition-colors ${
                         isActive
-                          ? "bg-[var(--muted)] text-[var(--foreground)]"
-                          : "hover:bg-[var(--muted)]/50 text-[var(--foreground)]"
+                          ? "bg-[var(--sidebar-active)] text-[var(--foreground)]"
+                          : "hover:bg-[var(--sidebar-hover)] text-[var(--muted-foreground)]"
                       }`}
                       onClick={() => {
                         onSelectConversation(conv.id);
-                        if (window.innerWidth < 768) onToggle();
+                        if (window.innerWidth < 768) {
+                          onToggle();
+                          setSearchQuery("");
+                        }
                       }}
                     >
-                      <div className="flex-1 min-w-0 px-3 py-2.5">
-                        <div className="flex items-center gap-2">
-                          <ProviderBadge providerId={conv.provider} />
-                          <p className="text-sm truncate">
-                            {conv.title}
-                          </p>
-                        </div>
-                        <p className="text-xs text-[var(--muted-foreground)] mt-0.5 opacity-75">
-                          {formatTimeAgo(conv.updatedAt)}
-                        </p>
-                      </div>
+                      <p className="flex-1 min-w-0 truncate text-sm px-3 py-2">
+                        {searchQuery.trim() && matches ? (
+                          <HighlightedText
+                            text={conv.title}
+                            matches={matches}
+                          />
+                        ) : (
+                          conv.title
+                        )}
+                      </p>
 
                       {/* Delete button */}
                       <button
@@ -173,8 +222,10 @@ export default function Sidebar({
                           e.stopPropagation();
                           onDeleteConversation(conv.id);
                         }}
-                        className={`flex-shrink-0 p-1.5 mr-2 rounded-md text-[var(--muted-foreground)] hover:text-[var(--destructive)] transition-all ${
-                          isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                        className={`flex-shrink-0 p-1 mr-1.5 rounded text-[var(--muted-foreground)] hover:text-[var(--destructive)] transition-all ${
+                          isActive
+                            ? "opacity-100"
+                            : "opacity-0 group-hover:opacity-100"
                         }`}
                         aria-label="Delete conversation"
                       >
@@ -188,10 +239,8 @@ export default function Sidebar({
           </div>
 
           {/* Footer */}
-          <div className="px-3 py-3 border-t border-[var(--sidebar-border)]">
-            <p className="text-[11px] text-[var(--muted-foreground)] text-center opacity-60">
-              ⌘K new chat · ⌘B toggle sidebar
-            </p>
+          <div className="px-3 py-2">
+            <ThemeToggle />
           </div>
         </div>
       </aside>

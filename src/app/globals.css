@@ -22,6 +22,8 @@
   --color-ring: var(--ring);
   --color-sidebar-bg: var(--sidebar-bg);
   --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-hover: var(--sidebar-hover);
+  --color-sidebar-active: var(--sidebar-active);
   --color-user-bubble: var(--user-bubble);
   --color-user-bubble-text: var(--user-bubble-text);
   --color-assistant-bubble: var(--assistant-bubble);
@@ -65,9 +67,11 @@
   /* Ring */
   --ring: #4f46e5;
 
-  /* Sidebar — warm, differentiated from main bg */
-  --sidebar-bg: #f3f4f6;
-  --sidebar-border: #e5e7eb;
+  /* Sidebar — blends with main bg for unified feel */
+  --sidebar-bg: #f9fafb;
+  --sidebar-border: #eef0f2;
+  --sidebar-hover: rgba(0, 0, 0, 0.04);
+  --sidebar-active: rgba(0, 0, 0, 0.07);
 
   /* Chat bubbles */
   --user-bubble: #4f46e5;
@@ -118,8 +122,10 @@
   --ring: #818cf8;
 
   /* Sidebar — subtle distinction from main bg */
-  --sidebar-bg: #151520;
-  --sidebar-border: #2a2a3a;
+  --sidebar-bg: #131320;
+  --sidebar-border: #222236;
+  --sidebar-hover: rgba(255, 255, 255, 0.05);
+  --sidebar-active: rgba(255, 255, 255, 0.08);
 
   /* Chat bubbles */
   --user-bubble: #6366f1;
@@ -181,6 +187,20 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
+}
+
+/* ─── Sidebar Scrollbar (thinner, auto-hide) ─── */
+.sidebar-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 2px;
+}
+
+.sidebar-scroll:hover::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
 }
 
 /* ─── Markdown / Prose Styling ─── */
