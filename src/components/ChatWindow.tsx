@@ -29,6 +29,13 @@ export default function ChatWindow({
 }: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isNearBottom = useRef(true);
+
+  // Refs to avoid stale closures in useChat callbacks
+  const messagesRef = useRef<{ id: string; role: string; content: string }[]>([]);
+  const conversationRef = useRef(conversation);
+  const selectedProviderRef = useRef<string>(DEFAULT_PROVIDER);
+  const selectedModelRef = useRef<string>(DEFAULT_MODEL);
 
   // Persist provider/model selection
   const [selectedProvider, setSelectedProvider] = useState<string>(() => {
@@ -70,39 +77,62 @@ export default function ChatWindow({
     body: {
       provider: selectedProvider,
       model: selectedModel,
+      conversationId: conversation?.id,
     },
+    experimental_throttle: 50,
     initialMessages:
       conversation?.messages?.map((m) => ({
         id: m.id,
         role: m.role as "user" | "assistant",
         content: m.content,
       })) || [],
-    onFinish: (message) => {
+    onFinish: () => {
       // Save the conversation when the assistant finishes
-      if (conversation && onUpdateConversation) {
-        const updatedMessages = [
-          ...messages,
-          { id: message.id, role: message.role, content: message.content },
-        ];
+      // Use refs to access the latest state and avoid stale closures.
+      // messages from useChat already includes the finished assistant message,
+      // so no manual append is needed.
+      const currentConversation = conversationRef.current;
+      const currentMessages = messagesRef.current;
+      const provider = selectedProviderRef.current;
+      const model = selectedModelRef.current;
+
+      if (currentConversation && onUpdateConversation) {
         onUpdateConversation({
-          ...conversation,
-          messages: updatedMessages.map((m) => ({
+          ...currentConversation,
+          messages: currentMessages.map((m) => ({
             id: m.id,
             role: m.role as "user" | "assistant",
             content: m.content,
           })),
-          provider: selectedProvider,
-          model: selectedModel,
+          provider,
+          model,
           updatedAt: Date.now(),
           title:
-            conversation.title === "New Chat" && updatedMessages.length > 0
-              ? updatedMessages[0].content.slice(0, 50) +
-                (updatedMessages[0].content.length > 50 ? "..." : "")
-              : conversation.title,
+            currentConversation.title === "New Chat" && currentMessages.length > 0
+              ? currentMessages[0].content.slice(0, 50) +
+                (currentMessages[0].content.length > 50 ? "..." : "")
+              : currentConversation.title,
         });
       }
     },
   });
+
+  // Keep refs in sync with latest state to avoid stale closures in callbacks
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
+
+  useEffect(() => {
+    conversationRef.current = conversation;
+  }, [conversation]);
+
+  useEffect(() => {
+    selectedProviderRef.current = selectedProvider;
+  }, [selectedProvider]);
+
+  useEffect(() => {
+    selectedModelRef.current = selectedModel;
+  }, [selectedModel]);
 
   // Sync messages when conversation changes
   useEffect(() => {
@@ -119,10 +149,28 @@ export default function ChatWindow({
     }
   }, [conversation?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Auto-scroll to bottom
+  // Track user scroll position
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      isNearBottom.current = scrollHeight - scrollTop - clientHeight < 100;
+    };
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Auto-scroll to bottom (only when user is near the bottom)
+  useEffect(() => {
+    if (isNearBottom.current) {
+      messagesEndRef.current?.scrollIntoView({
+        behavior: isLoading ? "instant" : "smooth",
+      });
+    }
+  }, [messages, isLoading]);
 
   return (
     <div className="flex flex-col h-full">

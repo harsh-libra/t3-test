@@ -1,6 +1,7 @@
 import { streamText } from "ai";
 import { z } from "zod";
 import { getLanguageModel } from "@/lib/providers";
+import { db } from "@/lib/db";
 
 // Force dynamic — we need runtime env vars, not static generation
 export const runtime = "nodejs";
@@ -16,6 +17,7 @@ const ChatRequestSchema = z.object({
   ),
   provider: z.string().min(1, "Provider is required"),
   model: z.string().min(1, "Model is required"),
+  conversationId: z.string().optional(),
 });
 
 export async function POST(req: Request) {
@@ -34,7 +36,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { messages, provider, model } = parseResult.data;
+    const { messages, provider, model, conversationId } = parseResult.data;
 
     // Get the language model instance (handles key lookup + validation)
     let languageModel;
@@ -54,6 +56,36 @@ export async function POST(req: Request) {
       model: languageModel,
       messages,
       maxTokens: 4096,
+      async onFinish({ text }) {
+        if (conversationId) {
+          try {
+            // Save the latest user message and assistant response
+            const lastUserMessage = messages[messages.length - 1];
+            await db.message.createMany({
+              data: [
+                {
+                  role: lastUserMessage.role,
+                  content: lastUserMessage.content,
+                  conversationId,
+                },
+                {
+                  role: "assistant",
+                  content: text,
+                  conversationId,
+                },
+              ],
+            });
+            // Update conversation timestamp
+            await db.conversation.update({
+              where: { id: conversationId },
+              data: { updatedAt: new Date() },
+            });
+          } catch (err) {
+            console.error("[Chat API] Failed to persist messages:", err);
+            // Don't throw — message was already streamed to the client
+          }
+        }
+      },
     });
 
     // Return the streaming response
