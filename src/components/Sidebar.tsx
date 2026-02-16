@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
-  MessageSquarePlus,
+  Plus,
   Trash2,
   MessageSquare,
   X,
@@ -10,7 +10,6 @@ import {
   Sparkles,
   Cpu,
   Zap,
-  Keyboard,
 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import type { Conversation } from "@/types";
@@ -28,11 +27,11 @@ interface SidebarProps {
 function ProviderBadge({ providerId }: { providerId: string }) {
   switch (providerId) {
     case "openai":
-      return <Sparkles size={13} className="text-green-500 flex-shrink-0" />;
+      return <Sparkles size={12} className="text-green-500 flex-shrink-0" />;
     case "anthropic":
-      return <Cpu size={13} className="text-orange-500 flex-shrink-0" />;
+      return <Cpu size={12} className="text-orange-500 flex-shrink-0" />;
     case "google":
-      return <Zap size={13} className="text-blue-500 flex-shrink-0" />;
+      return <Zap size={12} className="text-blue-500 flex-shrink-0" />;
     default:
       return null;
   }
@@ -61,8 +60,6 @@ export default function Sidebar({
   isOpen,
   onToggle,
 }: SidebarProps) {
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [showShortcuts, setShowShortcuts] = useState(false);
 
   return (
     <>
@@ -88,23 +85,14 @@ export default function Sidebar({
       <aside
         className={`fixed md:relative z-40 h-full flex flex-col bg-sidebar-bg border-r border-sidebar-border transition-all duration-300 ease-in-out transition-theme ${
           isOpen
-            ? "w-80 translate-x-0"
-            : "w-80 -translate-x-full md:w-0 md:translate-x-0 md:overflow-hidden"
+            ? "w-64 translate-x-0"
+            : "w-64 -translate-x-full md:w-0 md:translate-x-0 md:overflow-hidden"
         }`}
       >
-        <div className="flex flex-col h-full w-80">
+        <div className="flex flex-col h-full w-64">
           {/* Header */}
-          <div
-            className="flex items-center justify-between px-5 py-4 border-b border-[var(--sidebar-border)]"
-            style={{ boxShadow: "var(--shadow-sm)" }}
-          >
-            <h1 className="text-lg font-bold text-[var(--foreground)] flex items-center gap-2.5 tracking-tight">
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center"
-                style={{ background: "var(--gradient-primary)" }}
-              >
-                <MessageSquare size={16} className="text-white" />
-              </div>
+          <div className="flex items-center justify-between px-3.5 py-3 border-b border-[var(--sidebar-border)]">
+            <h1 className="text-sm font-semibold text-[var(--foreground)] tracking-tight">
               T3 Chat
             </h1>
             <div className="flex items-center gap-1">
@@ -120,83 +108,78 @@ export default function Sidebar({
           </div>
 
           {/* New Chat button */}
-          <div className="px-4 py-3">
+          <div className="px-3 py-2">
             <button
               onClick={() => {
                 onNewChat();
                 if (window.innerWidth < 768) onToggle();
               }}
-              className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition-all font-medium text-sm"
-              style={{ boxShadow: "0 2px 8px rgba(79, 70, 229, 0.25)" }}
+              className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--muted)] transition-all text-sm font-medium"
             >
               <span className="flex items-center gap-2">
-                <MessageSquarePlus size={18} />
+                <Plus size={16} />
                 New Chat
               </span>
-              <kbd className="hidden sm:inline text-xs opacity-80 bg-white/20 px-2 py-0.5 rounded-md font-mono">
+              <kbd className="hidden sm:inline text-[10px] text-[var(--muted-foreground)] bg-[var(--muted)] px-1.5 py-0.5 rounded font-mono">
                 ⌘K
               </kbd>
             </button>
           </div>
 
           {/* Conversation list */}
-          <div className="flex-1 overflow-y-auto px-3 pb-3">
+          <div className="flex-1 overflow-y-auto px-2.5 pb-2.5">
             {conversations.length === 0 ? (
-              <div className="text-center py-10 text-[var(--muted-foreground)] text-sm">
+              <div className="text-center py-8 text-[var(--muted-foreground)] text-sm">
                 <MessageSquare
-                  size={36}
-                  className="mx-auto mb-3 opacity-40"
+                  size={28}
+                  className="mx-auto mb-2.5 opacity-40"
                 />
                 <p className="font-medium">No conversations yet</p>
                 <p className="text-xs mt-1.5 opacity-75">Start a new chat to begin</p>
               </div>
             ) : (
-              <div className="space-y-1.5">
+              <div className="space-y-0.5">
                 {conversations.map((conv) => {
                   const isActive = conv.id === currentConversationId;
-                  const isHovered = conv.id === hoveredId;
 
                   return (
                     <div
                       key={conv.id}
-                      className={`group relative flex items-center rounded-xl cursor-pointer transition-all ${
+                      className={`group relative flex items-center rounded-lg cursor-pointer transition-colors ${
                         isActive
-                          ? "bg-[var(--accent)] text-[var(--accent-foreground)] border-l-2 border-l-[var(--primary)]"
-                          : "hover:bg-[var(--muted)] text-[var(--foreground)] border-l-2 border-l-transparent"
+                          ? "bg-[var(--muted)] text-[var(--foreground)]"
+                          : "hover:bg-[var(--muted)]/50 text-[var(--foreground)]"
                       }`}
-                      onMouseEnter={() => setHoveredId(conv.id)}
-                      onMouseLeave={() => setHoveredId(null)}
                       onClick={() => {
                         onSelectConversation(conv.id);
                         if (window.innerWidth < 768) onToggle();
                       }}
                     >
-                      <div className="flex-1 min-w-0 px-3.5 py-3">
+                      <div className="flex-1 min-w-0 px-3 py-2.5">
                         <div className="flex items-center gap-2">
                           <ProviderBadge providerId={conv.provider} />
-                          <p className="text-sm font-medium truncate">
+                          <p className="text-sm truncate">
                             {conv.title}
                           </p>
                         </div>
-                        <p className="text-xs text-[var(--muted-foreground)] mt-1 tracking-wide">
-                          {conv.messages.length} messages ·{" "}
+                        <p className="text-xs text-[var(--muted-foreground)] mt-0.5 opacity-75">
                           {formatTimeAgo(conv.updatedAt)}
                         </p>
                       </div>
 
                       {/* Delete button */}
-                      {(isHovered || isActive) && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onDeleteConversation(conv.id);
-                          }}
-                          className="flex-shrink-0 p-2 mr-2 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--destructive)] hover:bg-[var(--muted)] transition-colors"
-                          aria-label="Delete conversation"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      )}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDeleteConversation(conv.id);
+                        }}
+                        className={`flex-shrink-0 p-1.5 mr-2 rounded-md text-[var(--muted-foreground)] hover:text-[var(--destructive)] transition-all ${
+                          isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                        }`}
+                        aria-label="Delete conversation"
+                      >
+                        <Trash2 size={14} />
+                      </button>
                     </div>
                   );
                 })}
@@ -204,55 +187,11 @@ export default function Sidebar({
             )}
           </div>
 
-          {/* Footer with shortcuts */}
-          <div className="px-4 py-3.5 border-t border-[var(--sidebar-border)]">
-            <button
-              onClick={() => setShowShortcuts(!showShortcuts)}
-              className="w-full flex items-center justify-center gap-2 text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors py-1"
-            >
-              <Keyboard size={14} />
-              Keyboard shortcuts
-            </button>
-            {showShortcuts && (
-              <div className="mt-2.5 p-3.5 rounded-lg bg-[var(--muted)] text-xs space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="tracking-wide">New chat</span>
-                  <kbd
-                    className="px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)] font-mono text-[var(--muted-foreground)]"
-                    style={{ boxShadow: "var(--shadow-sm)" }}
-                  >
-                    ⌘K
-                  </kbd>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="tracking-wide">Toggle sidebar</span>
-                  <kbd
-                    className="px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)] font-mono text-[var(--muted-foreground)]"
-                    style={{ boxShadow: "var(--shadow-sm)" }}
-                  >
-                    ⌘B
-                  </kbd>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="tracking-wide">Send message</span>
-                  <kbd
-                    className="px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)] font-mono text-[var(--muted-foreground)]"
-                    style={{ boxShadow: "var(--shadow-sm)" }}
-                  >
-                    Enter
-                  </kbd>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="tracking-wide">New line</span>
-                  <kbd
-                    className="px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)] font-mono text-[var(--muted-foreground)]"
-                    style={{ boxShadow: "var(--shadow-sm)" }}
-                  >
-                    ⇧Enter
-                  </kbd>
-                </div>
-              </div>
-            )}
+          {/* Footer */}
+          <div className="px-3 py-3 border-t border-[var(--sidebar-border)]">
+            <p className="text-[11px] text-[var(--muted-foreground)] text-center opacity-60">
+              ⌘K new chat · ⌘B toggle sidebar
+            </p>
           </div>
         </div>
       </aside>
