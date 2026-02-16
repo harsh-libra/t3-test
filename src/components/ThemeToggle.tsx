@@ -27,7 +27,7 @@ export default function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="w-10 h-10 rounded-lg bg-[var(--muted)] animate-pulse" />
+      <div className="w-8 h-8 rounded-lg bg-[var(--muted)] animate-pulse" />
     );
   }
 
@@ -44,15 +44,15 @@ export default function ThemeToggle() {
     <div className="relative" data-theme-toggle>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2.5 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors"
+        className="p-2 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors"
         aria-label="Toggle theme"
       >
-        {React.createElement(currentIcon, { size: 18 })}
+        {React.createElement(currentIcon, { size: 16 })}
       </button>
 
       {isOpen && (
         <div
-          className="absolute right-0 top-full mt-2 w-40 rounded-xl border border-[var(--border)] bg-[var(--card)] z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
+          className="absolute left-0 bottom-full mb-2 w-40 rounded-xl border border-[var(--border)] bg-[var(--card)] z-50 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200"
           style={{ boxShadow: "var(--shadow-lg)" }}
         >
           <div className="p-1.5">
@@ -63,7 +63,7 @@ export default function ThemeToggle() {
                   setTheme(option.value);
                   setIsOpen(false);
                 }}
-                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-sm transition-all ${
+                className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all ${
                   theme === option.value
                     ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
                     : "text-[var(--card-foreground)] hover:bg-[var(--muted)]"
