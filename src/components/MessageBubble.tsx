@@ -5,12 +5,19 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { Copy, Check, User, Bot } from "lucide-react";
+import { Copy, Check, User, Bot, FileText } from "lucide-react";
+
+interface Attachment {
+  name: string;
+  contentType: string;
+  url: string;
+}
 
 interface MessageBubbleProps {
   role: "user" | "assistant" | "system";
   content: string;
   isStreaming?: boolean;
+  experimental_attachments?: Attachment[];
 }
 
 function CodeBlock({
@@ -72,6 +79,7 @@ const MessageBubble = memo(function MessageBubble({
   role,
   content,
   isStreaming = false,
+  experimental_attachments,
 }: MessageBubbleProps) {
   const isUser = role === "user";
 
@@ -99,7 +107,31 @@ const MessageBubble = memo(function MessageBubble({
         style={isUser ? { boxShadow: "var(--shadow-sm)" } : {}}
       >
         {isUser ? (
-          <p className="whitespace-pre-wrap leading-relaxed">{content}</p>
+          <div>
+            {experimental_attachments && experimental_attachments.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-2">
+                {experimental_attachments.map((attachment, index) => (
+                  <div key={index}>
+                    {attachment.contentType?.startsWith("image/") ? (
+                      <img
+                        src={attachment.url}
+                        alt={attachment.name || `attachment-${index}`}
+                        className="max-w-[200px] max-h-[200px] rounded-lg object-cover"
+                      />
+                    ) : (
+                      <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 text-sm">
+                        <FileText size={16} />
+                        <span className="max-w-[150px] truncate">
+                          {attachment.name}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+            <p className="whitespace-pre-wrap leading-relaxed">{content}</p>
+          </div>
         ) : (
           <div className="prose max-w-none">
             <ReactMarkdown
