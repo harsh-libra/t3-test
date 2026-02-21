@@ -1,19 +1,21 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import {
   MessageSquarePlus,
   Trash2,
   MessageSquare,
   X,
   Menu,
-  Sparkles,
-  Cpu,
-  Zap,
   Keyboard,
+  History,
+  Search,
 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import type { Conversation } from "@/types";
+import ProviderBadge from "./ProviderBadge";
+import { formatTimeAgo } from "@/lib/utils";
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -23,33 +25,6 @@ interface SidebarProps {
   onDeleteConversation: (id: string) => void;
   isOpen: boolean;
   onToggle: () => void;
-}
-
-function ProviderBadge({ providerId }: { providerId: string }) {
-  switch (providerId) {
-    case "openai":
-      return <Sparkles size={13} className="text-green-500 flex-shrink-0" />;
-    case "anthropic":
-      return <Cpu size={13} className="text-orange-500 flex-shrink-0" />;
-    case "google":
-      return <Zap size={13} className="text-blue-500 flex-shrink-0" />;
-    default:
-      return null;
-  }
-}
-
-function formatTimeAgo(timestamp: number): string {
-  const now = Date.now();
-  const diff = now - timestamp;
-  const minutes = Math.floor(diff / 60000);
-  const hours = Math.floor(diff / 3600000);
-  const days = Math.floor(diff / 86400000);
-
-  if (minutes < 1) return "Just now";
-  if (minutes < 60) return `${minutes}m ago`;
-  if (hours < 24) return `${hours}h ago`;
-  if (days < 7) return `${days}d ago`;
-  return new Date(timestamp).toLocaleDateString();
 }
 
 export default function Sidebar({
@@ -119,8 +94,8 @@ export default function Sidebar({
             </div>
           </div>
 
-          {/* New Chat button */}
-          <div className="px-4 py-3">
+          {/* New Chat and Navigation */}
+          <div className="px-4 py-3 space-y-2">
             <button
               onClick={() => {
                 onNewChat();
@@ -137,6 +112,22 @@ export default function Sidebar({
                 ⌘K
               </kbd>
             </button>
+            <div className="flex gap-2">
+              <Link
+                href="/history"
+                className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl bg-[var(--card)] text-[var(--foreground)] hover:bg-[var(--muted)] border border-[var(--sidebar-border)] transition-all text-sm font-medium shadow-sm"
+              >
+                <History size={16} />
+                History
+              </Link>
+              <Link
+                href="/history"
+                className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl bg-[var(--card)] text-[var(--foreground)] hover:bg-[var(--muted)] border border-[var(--sidebar-border)] transition-all text-sm font-medium shadow-sm"
+              >
+                <Search size={16} />
+                Search
+              </Link>
+            </div>
           </div>
 
           {/* Conversation list */}
@@ -204,8 +195,8 @@ export default function Sidebar({
             )}
           </div>
 
-          {/* Footer with shortcuts */}
-          <div className="px-4 py-3.5 border-t border-[var(--sidebar-border)]">
+          {/* Footer with Shortcuts */}
+          <div className="px-4 py-3.5 border-t border-[var(--sidebar-border)] space-y-1">
             <button
               onClick={() => setShowShortcuts(!showShortcuts)}
               className="w-full flex items-center justify-center gap-2 text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors py-1"

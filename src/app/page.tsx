@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import ChatWindow from "@/components/ChatWindow";
 import Sidebar from "@/components/Sidebar";
 import KeyboardShortcuts from "@/components/KeyboardShortcuts";
@@ -25,7 +26,7 @@ function createNewConversation(): Conversation {
   };
 }
 
-export default function Home() {
+function HomeContent() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentConversationId, setCurrentConversationId] = useState<
     string | null
@@ -33,13 +34,19 @@ export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mounted, setMounted] = useState(false);
 
+  const searchParams = useSearchParams();
+  const idParam = searchParams.get("id");
+
   // Load conversations from localStorage on mount
   useEffect(() => {
     setMounted(true);
     const stored = listConversations();
     setConversations(stored);
 
-    if (stored.length > 0) {
+    // If id param exists and matches a conversation, select it
+    if (idParam && stored.some((c) => c.id === idParam)) {
+      setCurrentConversationId(idParam);
+    } else if (stored.length > 0) {
       setCurrentConversationId(stored[0].id);
     } else {
       // Create initial conversation
@@ -53,7 +60,7 @@ export default function Home() {
     if (window.innerWidth < 768) {
       setSidebarOpen(false);
     }
-  }, []);
+  }, [idParam]);
 
   const currentConversation =
     conversations.find((c) => c.id === currentConversationId) || null;
@@ -153,3 +160,12 @@ export default function Home() {
     </main>
   );
 }
+
+export default function Home() {
+  return (
+    <Suspense fallback={null}>
+      <HomeContent />
+    </Suspense>
+  );
+}
+
