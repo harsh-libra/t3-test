@@ -46,30 +46,32 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language = "text", children }) =>
 
   return (
     <div
-      className="relative group my-4 rounded-xl overflow-hidden border border-[var(--border)] bg-[var(--card)] transition-all duration-200"
+      className="relative group my-4 rounded-xl overflow-hidden border border-[var(--border)] bg-[var(--card)] transition-all duration-200 hover:border-[var(--primary)]/20 hover:shadow-md"
       style={{ boxShadow: "var(--shadow-sm)" }}
     >
       <div className="flex items-center justify-between px-4 py-2 text-xs font-medium bg-[var(--muted)]/50 text-[var(--muted-foreground)] border-b border-[var(--border)] transition-colors duration-200">
         <div className="flex items-center gap-2">
           <Icon size={14} className="text-[var(--primary)]" />
-          <span className="capitalize">{language}</span>
+          <span className="capitalize animate-fade-in">{language}</span>
         </div>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 hover:text-[var(--foreground)] transition-colors px-2 py-1 rounded-md hover:bg-[var(--background)]"
+          className="flex items-center gap-1.5 hover:text-[var(--foreground)] transition-all duration-200 px-2 py-1 rounded-md hover:bg-[var(--background)] opacity-0 group-hover:opacity-100"
           aria-label="Copy code"
         >
-          {copied ? (
-            <>
-              <Check size={14} className="text-green-500" />
-              <span>Copied</span>
-            </>
-          ) : (
-            <>
-              <Copy size={14} />
-              <span>Copy</span>
-            </>
-          )}
+          <span key={copied ? 'check' : 'copy'} className="animate-scale-in inline-flex items-center gap-1.5">
+            {copied ? (
+              <>
+                <Check size={14} className="text-green-500" />
+                <span>Copied</span>
+              </>
+            ) : (
+              <>
+                <Copy size={14} />
+                <span>Copy</span>
+              </>
+            )}
+          </span>
         </button>
       </div>
       <div className="relative font-mono transition-colors duration-200">
