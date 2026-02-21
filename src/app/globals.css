@@ -28,6 +28,14 @@
   --color-assistant-bubble-text: var(--assistant-bubble-text);
   --color-input-bg: var(--input-bg);
   --color-input-border: var(--input-border);
+  
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  
+  --transition-fast: var(--transition-fast);
+  --transition-normal: var(--transition-normal);
+  --transition-slow: var(--transition-slow);
 }
 
 /* ─── Type Scale ─── */
@@ -38,115 +46,122 @@
   --font-lg: 1rem;
   --font-xl: 1.25rem;
   --font-2xl: 1.5rem;
+  
+  /* Standard Transitions */
+  --transition-fast: 100ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ─── Light Theme ─── */
 :root {
-  /* Backgrounds */
+  /* Backgrounds — warmer, softer feel */
   --background: #fafbfc;
-  --foreground: #111827;
-  --muted: #f1f3f5;
-  --muted-foreground: #6b7280;
-  --border: #e5e7eb;
+  --foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --border: #e2e8f0;
   --card: #ffffff;
-  --card-foreground: #111827;
+  --card-foreground: #0f172a;
 
   /* Primary — refined indigo */
-  --primary: #4f46e5;
+  --primary: #6366f1;
   --primary-foreground: #ffffff;
 
-  /* Accent — richer active-state feel */
-  --accent: #eef2ff;
-  --accent-foreground: #3730a3;
+  /* Accent — subtle violet tint */
+  --accent: #f5f3ff;
+  --accent-foreground: #6366f1;
 
   /* Destructive */
   --destructive: #ef4444;
 
   /* Ring */
-  --ring: #4f46e5;
+  --ring: #6366f1;
 
-  /* Sidebar — warm, differentiated from main bg */
-  --sidebar-bg: #f3f4f6;
-  --sidebar-border: #e5e7eb;
+  /* Sidebar — clean, light */
+  --sidebar-bg: #f8fafc;
+  --sidebar-border: #e2e8f0;
 
   /* Chat bubbles */
-  --user-bubble: #4f46e5;
+  --user-bubble: #6366f1;
   --user-bubble-text: #ffffff;
-  --assistant-bubble: #f8f9fb;
-  --assistant-bubble-text: #1f2937;
+  --assistant-bubble: #ffffff;
+  --assistant-bubble-text: #0f172a;
 
   /* Input */
   --input-bg: #ffffff;
-  --input-border: #d1d5db;
+  --input-border: #cbd5e1;
 
   /* Scrollbar */
   --scrollbar-thumb: #cbd5e1;
   --scrollbar-track: transparent;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  /* Shadows — softer, more elegant */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
 
-  /* Gradient */
-  --gradient-primary: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #818cf8 100%);
+  /* Gradient — richer, more sophisticated */
+  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  --gradient-surface: linear-gradient(to bottom right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6));
+  --gradient-subtle: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #e0e7ff 100%);
 }
 
 /* ─── Dark Theme ─── */
 .dark {
-  /* Backgrounds — softer, with blue undertones */
-  --background: #12121a;
-  --foreground: #f0f0f4;
-  --muted: #1e1e2a;
-  --muted-foreground: #9ca3b0;
-  --border: #2a2a3a;
-  --card: #1a1a26;
-  --card-foreground: #f0f0f4;
+  /* Backgrounds — rich, deep midnight */
+  --background: #0a0a0f;
+  --foreground: #f1f5f9;
+  --muted: #141420;
+  --muted-foreground: #94a3b8;
+  --border: #1e1e2e;
+  --card: #111118;
+  --card-foreground: #f1f5f9;
 
-  /* Primary — brighter for dark bg */
+  /* Primary — brighter indigo for contrast */
   --primary: #818cf8;
   --primary-foreground: #ffffff;
 
-  /* Accent — deep indigo */
-  --accent: #252540;
-  --accent-foreground: #a5b4fc;
+  /* Accent — dark violet */
+  --accent: #1e1b4b;
+  --accent-foreground: #e0e7ff;
 
   /* Destructive */
-  --destructive: #dc2626;
+  --destructive: #f87171;
 
   /* Ring */
   --ring: #818cf8;
 
-  /* Sidebar — subtle distinction from main bg */
-  --sidebar-bg: #151520;
-  --sidebar-border: #2a2a3a;
+  /* Sidebar — deep, rich */
+  --sidebar-bg: #08080d;
+  --sidebar-border: #1a1a2a;
 
   /* Chat bubbles */
   --user-bubble: #6366f1;
   --user-bubble-text: #ffffff;
-  --assistant-bubble: #1e1e2c;
-  --assistant-bubble-text: #e5e5ec;
+  --assistant-bubble: #141420;
+  --assistant-bubble-text: #e2e8f0;
 
   /* Input */
-  --input-bg: #1a1a26;
-  --input-border: #363646;
+  --input-bg: #111118;
+  --input-border: #1e1e2e;
 
   /* Scrollbar */
-  --scrollbar-thumb: #3f3f50;
+  --scrollbar-thumb: #2d2d40;
   --scrollbar-track: transparent;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.35), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+  /* Shadows — dramatic */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
 
-  /* Gradient */
-  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #818cf8 50%, #a5b4fc 100%);
+  /* Gradient — vibrant for dark */
+  --gradient-primary: linear-gradient(135deg, #818cf8 0%, #a78bfa 50%, #c084fc 100%);
+  --gradient-surface: linear-gradient(to bottom right, rgba(20, 20, 32, 0.9), rgba(20, 20, 32, 0.6));
+  --gradient-subtle: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
 }
-
-/* Removed custom * { padding: 0; margin: 0; } reset — Tailwind v4's Preflight 
-   already handles this inside @layer base. The un-layered version was overriding 
-   all Tailwind padding/margin utility classes due to CSS Cascade Layer specificity rules. */
 
 html,
 body {
@@ -167,7 +182,8 @@ body {
 
 /* ─── Custom Scrollbar ─── */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -176,18 +192,52 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: var(--scrollbar-thumb);
-  border-radius: 3px;
+  border-radius: 10px;
+  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
 }
 
+/* ─── UI Utilities ─── */
+.hover-glow {
+  transition: all var(--transition-normal);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px -5px var(--primary);
+  transform: translateY(-1px);
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.dark .glass {
+  background: rgba(17, 17, 24, 0.7);
+}
+
+/* Assistant bubble glassy effect in dark mode */
+.assistant-bubble {
+  background-color: var(--assistant-bubble);
+}
+
+.dark .assistant-bubble {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
 /* ─── Markdown / Prose Styling ─── */
 .prose pre {
   background: var(--muted) !important;
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   padding: 1rem;
   overflow-x: auto;
   margin: 1.25rem 0;
@@ -232,25 +282,26 @@ body {
 }
 
 .prose p {
-  margin: 1rem 0;
-  line-height: 1.75;
+  margin: 0.875rem 0;
+  line-height: 1.8;
 }
 
 .prose ul {
   list-style-type: disc;
-  margin: 1.25rem 0;
+  margin: 1rem 0;
   padding-left: 1.5rem;
 }
 
 .prose ol {
   list-style-type: decimal;
-  margin: 1.25rem 0;
+  margin: 1rem 0;
   padding-left: 1.5rem;
 }
 
 .prose li {
-  margin: 0.5rem 0;
+  margin: 0.375rem 0;
   padding-left: 0.25rem;
+  line-height: 1.75;
 }
 
 .prose li::marker {
@@ -263,66 +314,79 @@ body {
 }
 
 .prose h1 {
-  font-size: 1.75rem;
+  font-size: 1.625rem;
   margin-top: 2rem;
-  margin-bottom: 1rem;
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  line-height: 1.2;
+  margin-bottom: 0.875rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
 }
 
 .prose h2 {
-  font-size: 1.5rem;
+  font-size: 1.375rem;
   margin-top: 1.75rem;
-  margin-bottom: 0.875rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+  font-weight: 650;
   line-height: 1.3;
+  letter-spacing: -0.015em;
 }
 
 .prose h3 {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.625rem;
   font-weight: 600;
-  letter-spacing: -0.01em;
   line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+.prose strong {
+  color: var(--foreground);
+  font-weight: 650;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
 }
 
 .prose a {
   color: var(--primary);
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: all 0.2s ease;
+}
+
+.prose a:hover {
+  opacity: 0.85;
+  text-decoration-thickness: 2px;
 }
 
 .prose blockquote {
-  border-left: 4px solid var(--primary);
-  padding: 0.75rem 1.25rem;
-  background: color-mix(in srgb, var(--primary), transparent 94%);
+  border-left: 3px solid var(--primary);
+  padding: 0.75rem 1rem;
+  background: var(--muted);
   color: var(--foreground);
   margin: 1.5rem 0;
   font-style: italic;
-  border-radius: 0 0.5rem 0.5rem 0;
+  border-radius: 0 0.75rem 0.75rem 0;
 }
 
 .prose table {
   border-collapse: collapse;
   margin: 1.5rem 0;
   width: 100%;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
 }
 
 .prose tr {
   border-bottom: 1px solid var(--border);
-  transition: background-color 0.1s ease;
 }
 
 .prose tr:last-child {
   border-bottom: none;
-}
-
-.prose tr:hover {
-  background: var(--muted);
 }
 
 .prose th {
@@ -337,7 +401,236 @@ body {
   text-align: left;
 }
 
+/* ─── Keyframe Animations ─── */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes subtleBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes typingDot {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes messagePop {
+  from {
+    transform: scale(0.96) translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; transform: scale(0.98); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.15); }
+  50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.3); }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Animation Utility Classes ─── */
+
+.animate-fade-in {
+  animation: fadeIn 0.35s ease-out both;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.45s ease-out both;
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.35s ease-out both;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s ease-out both;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.25s ease-out both;
+}
+
+.animate-message-pop {
+  animation: messagePop 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s infinite ease-in-out;
+}
+
+.animate-typing-dot {
+  animation: typingDot 1.4s infinite ease-in-out;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, var(--muted) 25%, var(--border) 50%, var(--muted) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.animate-float {
+  animation: float 3s infinite ease-in-out;
+}
+
+.animate-glow {
+  animation: glow 2s infinite ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out both;
+}
+
+/* ─── Stagger Delay Utilities ─── */
+
+.animation-delay-75 {
+  animation-delay: 75ms;
+}
+
+.animation-delay-150 {
+  animation-delay: 150ms;
+}
+
+.animation-delay-225 {
+  animation-delay: 225ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+
 /* ─── Smooth Transitions ─── */
 .transition-theme {
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* ─── Focus Ring Utility ─── */
+.focus-ring {
+  outline: none;
+}
+.focus-ring:focus-visible {
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--primary);
+}
+
+/* ─── Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect, useCallback } from "react";
-import { Send, Square } from "lucide-react";
+import { Send, Square, ArrowUp } from "lucide-react";
 
 interface ChatInputProps {
   input: string;
@@ -10,6 +10,8 @@ interface ChatInputProps {
   onStop?: () => void;
   isLoading: boolean;
   placeholder?: string;
+  provider?: string;
+  model?: string;
 }
 
 export default function ChatInput({
@@ -18,7 +20,9 @@ export default function ChatInput({
   onSubmit,
   onStop,
   isLoading,
-  placeholder = "Send a message...",
+  placeholder = "Message T3 Chat...",
+  provider,
+  model,
 }: ChatInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -50,15 +54,15 @@ export default function ChatInput({
   };
 
   return (
-    <div
-      className="border-t border-[var(--border)] bg-[var(--background)] px-4 py-5 md:px-6"
-      style={{ boxShadow: "0 -1px 3px rgba(0,0,0,0.04)" }}
-    >
+    <div className="px-4 py-4 md:px-6 sticky bottom-0 z-30">
+      {/* Fade overlay */}
+      <div className="absolute inset-x-0 bottom-0 h-full bg-gradient-to-t from-background via-background/95 to-transparent pointer-events-none -z-10" />
+      
       <form
         onSubmit={onSubmit}
-        className="max-w-[48rem] mx-auto flex items-end gap-3.5"
+        className="max-w-3xl mx-auto relative"
       >
-        <div className="flex-1 relative">
+        <div className="relative group/input rounded-2xl border border-border/80 bg-card shadow-lg focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10 focus-within:shadow-xl transition-all duration-200">
           <textarea
             ref={textareaRef}
             value={input}
@@ -67,44 +71,41 @@ export default function ChatInput({
             placeholder={placeholder}
             rows={1}
             disabled={isLoading}
-            className="w-full resize-none rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-5 py-3.5 pr-5 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full resize-none rounded-2xl bg-transparent py-4 pl-4 pr-14 text-foreground placeholder:text-muted-foreground/50 focus:outline-none transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-[0.9375rem]"
             style={{
-              minHeight: "52px",
+              minHeight: "56px",
               maxHeight: "200px",
-              boxShadow: "var(--shadow-sm)",
             }}
           />
+          
+          {/* Send button - inside the input */}
+          <div className="absolute right-2 bottom-2">
+            {isLoading ? (
+              <button
+                type="button"
+                onClick={onStop}
+                className="w-9 h-9 flex items-center justify-center rounded-xl bg-destructive text-white hover:bg-destructive/90 active:scale-90 transition-all duration-200"
+                aria-label="Stop generating"
+              >
+                <Square size={14} className="fill-current" />
+              </button>
+            ) : (
+              <button
+                type="submit"
+                disabled={!input.trim() || isLoading}
+                className="w-9 h-9 flex items-center justify-center rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 active:scale-90 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-primary"
+                aria-label="Send message"
+              >
+                <ArrowUp size={16} strokeWidth={2.5} />
+              </button>
+            )}
+          </div>
         </div>
 
-        {isLoading ? (
-          <button
-            type="button"
-            onClick={onStop}
-            className="flex-shrink-0 p-3.5 rounded-2xl bg-[var(--destructive)] text-white hover:opacity-90 transition-opacity"
-            aria-label="Stop generating"
-          >
-            <Square size={20} />
-          </button>
-        ) : (
-          <button
-            type="submit"
-            disabled={!input.trim() || isLoading}
-            className="flex-shrink-0 p-3.5 rounded-2xl bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-            style={{
-              boxShadow: input.trim()
-                ? "0 2px 8px rgba(79, 70, 229, 0.2)"
-                : "none",
-            }}
-            aria-label="Send message"
-          >
-            <Send size={20} />
-          </button>
-        )}
+        <p className="text-center text-[10px] text-muted-foreground/60 mt-2 font-medium">
+          Enter to send · Shift+Enter for new line
+        </p>
       </form>
-
-      <p className="text-center text-[0.6875rem] text-[var(--muted-foreground)] mt-3 max-w-[48rem] mx-auto opacity-75 tracking-wide">
-        Press Enter to send · Shift+Enter for new line
-      </p>
     </div>
   );
 }
