@@ -110,20 +110,27 @@ export default function Home() {
   if (!mounted) {
     return (
       <main className="h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center animate-pulse">
-            <span className="text-white text-lg font-bold">T3</span>
+        <div className="flex flex-col items-center gap-4 animate-fade-in">
+          <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center animate-scale-in">
+            <span className="text-white text-xl font-bold">T3</span>
           </div>
-          <p className="text-muted-foreground text-sm animate-pulse">
-            Loading T3 Chat...
-          </p>
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-foreground font-medium text-sm animate-fade-in-up animation-delay-150">
+              T3 Chat
+            </p>
+            <div className="flex gap-1.5 animate-fade-in-up animation-delay-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/60 animate-typing-dot" />
+              <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/60 animate-typing-dot animation-delay-150" />
+              <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/60 animate-typing-dot animation-delay-300" />
+            </div>
+          </div>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="h-screen flex bg-background overflow-hidden">
+    <main className="h-screen flex bg-background overflow-hidden animate-fade-in">
       {/* Keyboard shortcuts handler */}
       <KeyboardShortcuts
         onNewChat={handleNewChat}

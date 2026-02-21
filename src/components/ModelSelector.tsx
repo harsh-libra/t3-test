@@ -82,7 +82,7 @@ export default function ModelSelector({
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--card-foreground)] hover:bg-[var(--muted)] transition-all text-sm font-medium"
+        className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--card-foreground)] hover:bg-[var(--muted)] transition-all active:scale-[0.97] text-sm font-medium"
         style={{ boxShadow: "var(--shadow-sm)" }}
         disabled={loading}
       >
@@ -92,20 +92,20 @@ export default function ModelSelector({
         <span className="truncate max-w-[200px]">{displayName}</span>
         <ChevronDown
           size={16}
-          className={`transition-transform text-[var(--muted-foreground)] ${isOpen ? "rotate-180" : ""}`}
+          className={`transition-transform duration-200 text-[var(--muted-foreground)] ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
 
       {isOpen && (
         <div
-          className="absolute top-full left-0 mt-2 w-80 rounded-xl border border-[var(--border)] bg-[var(--card)] z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
+          className="absolute top-full left-0 mt-2 w-80 rounded-xl border border-[var(--border)] bg-[var(--card)] z-50 overflow-hidden animate-scale-in"
           style={{ boxShadow: "var(--shadow-lg)" }}
         >
           <div className="p-2.5">
             {providers.map((provider, providerIndex) => (
               <div key={provider.id}>
                 {/* Provider header */}
-                <div className="flex items-center gap-2 px-3 py-2.5 text-xs font-semibold text-[var(--muted-foreground)] uppercase tracking-wider">
+                <div className={`flex items-center gap-2 px-3 py-2.5 text-xs font-semibold text-[var(--muted-foreground)] uppercase tracking-wider animate-fade-in ${providerIndex === 1 ? "animation-delay-75" : providerIndex === 2 ? "animation-delay-150" : providerIndex >= 3 ? "animation-delay-200" : ""}`}>
                   <ProviderIcon providerId={provider.id} />
                   {provider.name}
                   {!provider.available && (
@@ -137,7 +137,7 @@ export default function ModelSelector({
                           ? "opacity-40 cursor-not-allowed"
                           : isSelected
                             ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
-                            : "hover:bg-[var(--muted)] text-[var(--card-foreground)]"
+                            : "hover:bg-[var(--muted)] hover:translate-x-0.5 active:scale-[0.98] text-[var(--card-foreground)]"
                       }`}
                     >
                       <div className="flex flex-col gap-0.5">
@@ -151,7 +151,7 @@ export default function ModelSelector({
                         )}
                       </div>
                       {isSelected && (
-                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[var(--primary)] flex items-center justify-center">
+                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[var(--primary)] flex items-center justify-center animate-scale-in">
                           <Check size={12} className="text-white" />
                         </div>
                       )}

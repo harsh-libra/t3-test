@@ -161,7 +161,7 @@ export default function ChatWindow({
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center px-4">
             <div
-              className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 relative"
+              className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 relative animate-fade-in-up"
               style={{ background: "var(--gradient-primary)" }}
             >
               {/* Soft glow behind icon */}
@@ -171,14 +171,14 @@ export default function ChatWindow({
               />
               <MessageSquarePlus size={38} className="text-white relative z-10" />
             </div>
-            <h2 className="text-2xl font-bold text-foreground mb-3 tracking-tight">
+            <h2 className="text-2xl font-bold text-foreground mb-3 tracking-tight animate-fade-in-up animation-delay-150">
               T3 Chat
             </h2>
-            <p className="text-muted-foreground max-w-md mb-8 leading-relaxed">
+            <p className="text-muted-foreground max-w-md mb-8 leading-relaxed animate-fade-in-up animation-delay-225">
               Start a conversation with any AI model. Select your preferred
               provider and model from the dropdown above.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-lg">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-lg animate-fade-in-up animation-delay-300">
               {[
                 { text: "Explain quantum computing", icon: "🔬" },
                 { text: "Write a Python script", icon: "🐍" },
@@ -223,15 +223,9 @@ export default function ChatWindow({
                   </div>
                   <div className="rounded-2xl rounded-bl-md bg-assistant-bubble px-5 py-3.5 border border-[var(--border)]/50">
                     <div className="flex items-center gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-muted-foreground/60 animate-bounce" />
-                      <span
-                        className="w-2.5 h-2.5 rounded-full bg-muted-foreground/60 animate-bounce"
-                        style={{ animationDelay: "0.1s" }}
-                      />
-                      <span
-                        className="w-2.5 h-2.5 rounded-full bg-muted-foreground/60 animate-bounce"
-                        style={{ animationDelay: "0.2s" }}
-                      />
+                      <span className="w-2 h-2 rounded-full bg-muted-foreground/60 animate-typing-dot" />
+                      <span className="w-2 h-2 rounded-full bg-muted-foreground/60 animate-typing-dot animation-delay-150" />
+                      <span className="w-2 h-2 rounded-full bg-muted-foreground/60 animate-typing-dot animation-delay-300" />
                     </div>
                   </div>
                 </div>

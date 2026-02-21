@@ -69,7 +69,7 @@ export default function Sidebar({
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
+          className="fixed inset-0 bg-black/30 z-40 md:hidden backdrop-blur-sm animate-fade-in"
           onClick={onToggle}
         />
       )}
@@ -86,7 +86,7 @@ export default function Sidebar({
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:relative z-40 h-full flex flex-col bg-sidebar-bg border-r border-sidebar-border transition-all duration-300 ease-in-out transition-theme ${
+        className={`fixed md:relative z-40 h-full flex flex-col bg-sidebar-bg border-r border-sidebar-border transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] transition-theme ${
           isOpen
             ? "w-80 translate-x-0"
             : "w-80 -translate-x-full md:w-0 md:translate-x-0 md:overflow-hidden"
@@ -126,7 +126,7 @@ export default function Sidebar({
                 onNewChat();
                 if (window.innerWidth < 768) onToggle();
               }}
-              className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition-all font-medium text-sm"
+              className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 hover:shadow-sm active:scale-[0.97] transition-all duration-150 font-medium text-sm"
               style={{ boxShadow: "0 2px 8px rgba(79, 70, 229, 0.25)" }}
             >
               <span className="flex items-center gap-2">
@@ -152,18 +152,19 @@ export default function Sidebar({
               </div>
             ) : (
               <div className="space-y-1.5">
-                {conversations.map((conv) => {
+                {conversations.map((conv, index) => {
                   const isActive = conv.id === currentConversationId;
                   const isHovered = conv.id === hoveredId;
 
                   return (
                     <div
                       key={conv.id}
-                      className={`group relative flex items-center rounded-xl cursor-pointer transition-all ${
+                      className={`group relative flex items-center rounded-xl cursor-pointer transition-all duration-150 hover:translate-x-0.5 active:scale-[0.98] animate-fade-in-up ${
                         isActive
                           ? "bg-[var(--accent)] text-[var(--accent-foreground)] border-l-2 border-l-[var(--primary)]"
                           : "hover:bg-[var(--muted)] text-[var(--foreground)] border-l-2 border-l-transparent"
                       }`}
+                      style={{ animationDelay: `${Math.min(index * 50, 300)}ms` }}
                       onMouseEnter={() => setHoveredId(conv.id)}
                       onMouseLeave={() => setHoveredId(null)}
                       onClick={() => {
@@ -191,7 +192,7 @@ export default function Sidebar({
                             e.stopPropagation();
                             onDeleteConversation(conv.id);
                           }}
-                          className="flex-shrink-0 p-2 mr-2 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--destructive)] hover:bg-[var(--muted)] transition-colors"
+                          className="flex-shrink-0 p-2 mr-2 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--destructive)] hover:bg-[var(--muted)] hover:scale-110 active:scale-95 transition-all duration-150 animate-scale-in"
                           aria-label="Delete conversation"
                         >
                           <Trash2 size={14} />
@@ -208,13 +209,13 @@ export default function Sidebar({
           <div className="px-4 py-3.5 border-t border-[var(--sidebar-border)]">
             <button
               onClick={() => setShowShortcuts(!showShortcuts)}
-              className="w-full flex items-center justify-center gap-2 text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors py-1"
+              className="w-full flex items-center justify-center gap-2 text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] rounded-lg active:scale-[0.98] transition-all duration-150 py-1"
             >
               <Keyboard size={14} />
               Keyboard shortcuts
             </button>
             {showShortcuts && (
-              <div className="mt-2.5 p-3.5 rounded-lg bg-[var(--muted)] text-xs space-y-2">
+              <div className="mt-2.5 p-3.5 rounded-lg bg-[var(--muted)] text-xs space-y-2 animate-fade-in-down">
                 <div className="flex justify-between items-center">
                   <span className="tracking-wide">New chat</span>
                   <kbd

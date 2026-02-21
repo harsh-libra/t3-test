@@ -44,15 +44,17 @@ export default function ThemeToggle() {
     <div className="relative" data-theme-toggle>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2.5 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors"
+        className="p-2.5 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors duration-200 active:scale-90"
         aria-label="Toggle theme"
       >
-        {React.createElement(currentIcon, { size: 18 })}
+        <span key={theme} className="animate-scale-in inline-flex">
+          {React.createElement(currentIcon, { size: 18 })}
+        </span>
       </button>
 
       {isOpen && (
         <div
-          className="absolute right-0 top-full mt-2 w-40 rounded-xl border border-[var(--border)] bg-[var(--card)] z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
+          className="absolute right-0 top-full mt-2 w-40 rounded-xl border border-[var(--border)] bg-[var(--card)] z-50 overflow-hidden animate-scale-in"
           style={{ boxShadow: "var(--shadow-lg)" }}
         >
           <div className="p-1.5">
@@ -66,7 +68,7 @@ export default function ThemeToggle() {
                 className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-sm transition-all ${
                   theme === option.value
                     ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
-                    : "text-[var(--card-foreground)] hover:bg-[var(--muted)]"
+                    : "text-[var(--card-foreground)] hover:bg-[var(--muted)] hover:translate-x-0.5 active:scale-[0.98]"
                 }`}
               >
                 {React.createElement(option.icon, { size: 16 })}

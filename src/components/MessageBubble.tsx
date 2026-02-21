@@ -21,14 +21,13 @@ const MessageBubble = memo(function MessageBubble({
 
   return (
     <div
-      className={`flex gap-3.5 py-5 px-4 md:px-0 ${
+      className={`flex gap-3.5 py-5 px-4 md:px-0 animate-message-pop ${
         isUser ? "justify-end" : "justify-start"
       }`}
     >
       {!isUser && (
         <div
-          className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center bg-[var(--primary)] text-white mt-1"
-          style={{ boxShadow: "0 2px 8px rgba(79, 70, 229, 0.3)" }}
+          className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center bg-[var(--primary)] text-white mt-1 animate-scale-in shadow-[0_2px_8px_rgba(79,70,229,0.3)]"
         >
           <Bot size={18} />
         </div>
@@ -37,8 +36,8 @@ const MessageBubble = memo(function MessageBubble({
       <div
         className={`max-w-[80%] md:max-w-[70%] rounded-2xl px-5 py-3.5 ${
           isUser
-            ? "bg-[var(--user-bubble)] text-[var(--user-bubble-text)] rounded-br-md"
-            : "bg-[var(--assistant-bubble)] text-[var(--assistant-bubble-text)] rounded-bl-md border border-[var(--border)]/50"
+            ? "bg-[var(--user-bubble)] text-[var(--user-bubble-text)] rounded-br-md hover:shadow-md hover:scale-[1.01] transition-all duration-200"
+            : "bg-[var(--assistant-bubble)] text-[var(--assistant-bubble-text)] rounded-bl-md border border-[var(--border)]/50 hover:shadow-md hover:border-[var(--border)] transition-all duration-200"
         }`}
         style={isUser ? { boxShadow: "var(--shadow-sm)" } : {}}
       >
@@ -85,7 +84,7 @@ const MessageBubble = memo(function MessageBubble({
               {content}
             </ReactMarkdown>
             {isStreaming && (
-              <span className="inline-block w-2 h-5 bg-[var(--primary)] animate-pulse ml-1 rounded-sm" />
+              <span className="inline-block w-2 h-5 bg-[var(--primary)] animate-[pulse_1s_ease-in-out_infinite] ml-1 rounded-sm" />
             )}
           </div>
         )}
