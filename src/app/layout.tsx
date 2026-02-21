@@ -55,7 +55,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="transition-theme font-[family-name:var(--font-sans)]">
+      <body className="transition-theme font-sans">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
