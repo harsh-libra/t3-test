@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import {
   MessageSquarePlus,
   Trash2,
@@ -11,9 +11,14 @@ import {
   Cpu,
   Zap,
   Keyboard,
+  Search,
+  Edit2,
+  Check,
 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+import { useToast } from "./Toast";
 import type { Conversation } from "@/types";
+import { groupConversations } from "@/lib/conversations";
 
 interface SidebarProps {
   conversations: Conversation[];
@@ -21,6 +26,7 @@ interface SidebarProps {
   onSelectConversation: (id: string) => void;
   onNewChat: () => void;
   onDeleteConversation: (id: string) => void;
+  onUpdateConversation: (conversation: Conversation) => void;
   isOpen: boolean;
   onToggle: () => void;
 }
@@ -28,11 +34,11 @@ interface SidebarProps {
 function ProviderBadge({ providerId }: { providerId: string }) {
   switch (providerId) {
     case "openai":
-      return <Sparkles size={13} className="text-green-500 flex-shrink-0" />;
+      return <Sparkles size={12} className="text-green-500 flex-shrink-0" />;
     case "anthropic":
-      return <Cpu size={13} className="text-orange-500 flex-shrink-0" />;
+      return <Cpu size={12} className="text-orange-500 flex-shrink-0" />;
     case "google":
-      return <Zap size={13} className="text-blue-500 flex-shrink-0" />;
+      return <Zap size={12} className="text-blue-500 flex-shrink-0" />;
     default:
       return null;
   }
@@ -58,18 +64,76 @@ export default function Sidebar({
   onSelectConversation,
   onNewChat,
   onDeleteConversation,
+  onUpdateConversation,
   isOpen,
   onToggle,
 }: SidebarProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState("");
+  const editInputRef = useRef<HTMLInputElement>(null);
+  const { addToast } = useToast();
+
+  const filteredConversations = useMemo(() => {
+    if (!searchQuery.trim()) return conversations;
+    return conversations.filter((c) =>
+      c.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [conversations, searchQuery]);
+
+  const groupedConversations = useMemo(() => {
+    return groupConversations(filteredConversations);
+  }, [filteredConversations]);
+
+  useEffect(() => {
+    if (editingId && editInputRef.current) {
+      editInputRef.current.focus();
+      editInputRef.current.select();
+    }
+  }, [editingId]);
+
+  const handleStartEdit = (e: React.MouseEvent, conv: Conversation) => {
+    e.stopPropagation();
+    setEditingId(conv.id);
+    setEditingTitle(conv.title);
+  };
+
+  const handleSaveEdit = (e?: React.FormEvent | React.FocusEvent) => {
+    if (e) e.preventDefault();
+    if (editingId) {
+      const conv = conversations.find((c) => c.id === editingId);
+      if (conv && editingTitle.trim() && editingTitle !== conv.title) {
+        onUpdateConversation({
+          ...conv,
+          title: editingTitle.trim(),
+          updatedAt: Date.now(),
+        });
+        addToast({
+          type: "success",
+          message: "Conversation renamed",
+          duration: 2000,
+        });
+      }
+    }
+    setEditingId(null);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSaveEdit();
+    } else if (e.key === "Escape") {
+      setEditingId(null);
+    }
+  };
 
   return (
     <>
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
+          className="fixed inset-0 bg-black/30 z-40 md:hidden backdrop-blur-sm animate-fade-in"
           onClick={onToggle}
         />
       )}
@@ -77,41 +141,37 @@ export default function Sidebar({
       {/* Mobile hamburger button */}
       <button
         onClick={onToggle}
-        className="fixed top-3 left-3 z-50 p-2 rounded-lg bg-card border border-border text-foreground md:hidden"
-        style={{ boxShadow: "var(--shadow-md)" }}
+        className="fixed top-3 left-3 z-50 p-2.5 rounded-xl bg-card/90 backdrop-blur-lg border border-border/60 text-foreground md:hidden shadow-md active:scale-95 transition-all"
         aria-label="Toggle sidebar"
       >
-        {isOpen ? <X size={20} /> : <Menu size={20} />}
+        {isOpen ? <X size={18} /> : <Menu size={18} />}
       </button>
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:relative z-40 h-full flex flex-col bg-sidebar-bg border-r border-sidebar-border transition-all duration-300 ease-in-out transition-theme ${
+        className={`fixed md:relative z-40 h-full flex flex-col bg-sidebar-bg border-r border-sidebar-border transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
           isOpen
-            ? "w-80 translate-x-0"
-            : "w-80 -translate-x-full md:w-0 md:translate-x-0 md:overflow-hidden"
+            ? "w-72 translate-x-0"
+            : "w-72 -translate-x-full md:w-0 md:translate-x-0 md:overflow-hidden"
         }`}
       >
-        <div className="flex flex-col h-full w-80">
+        <div className="flex flex-col h-full w-72">
           {/* Header */}
-          <div
-            className="flex items-center justify-between px-5 py-4 border-b border-[var(--sidebar-border)]"
-            style={{ boxShadow: "var(--shadow-sm)" }}
-          >
-            <h1 className="text-lg font-bold text-[var(--foreground)] flex items-center gap-2.5 tracking-tight">
+          <div className="flex items-center justify-between px-4 h-[60px] border-b border-sidebar-border">
+            <h1 className="text-lg font-bold text-foreground flex items-center gap-2.5 tracking-tight">
               <div
                 className="w-8 h-8 rounded-lg flex items-center justify-center"
                 style={{ background: "var(--gradient-primary)" }}
               >
-                <MessageSquare size={16} className="text-white" />
+                <MessageSquare size={16} className="text-white" strokeWidth={2.5} />
               </div>
-              T3 Chat
+              <span>T3 Chat</span>
             </h1>
             <div className="flex items-center gap-1">
               <ThemeToggle />
               <button
                 onClick={onToggle}
-                className="p-1.5 rounded-lg hover:bg-[var(--muted)] text-[var(--muted-foreground)] transition-colors md:hidden"
+                className="p-2 rounded-lg hover:bg-muted text-muted-foreground transition-colors md:hidden"
                 aria-label="Close sidebar"
               >
                 <X size={18} />
@@ -120,137 +180,204 @@ export default function Sidebar({
           </div>
 
           {/* New Chat button */}
-          <div className="px-4 py-3">
+          <div className="px-3 pt-3 pb-2">
             <button
               onClick={() => {
                 onNewChat();
                 if (window.innerWidth < 768) onToggle();
               }}
-              className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition-all font-medium text-sm"
-              style={{ boxShadow: "0 2px 8px rgba(79, 70, 229, 0.25)" }}
+              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-white hover:brightness-110 active:scale-[0.98] transition-all duration-200 font-semibold text-sm relative overflow-hidden group"
+              style={{ background: "var(--gradient-primary)" }}
             >
-              <span className="flex items-center gap-2">
-                <MessageSquarePlus size={18} />
+              <span className="flex items-center gap-2 relative z-10">
+                <MessageSquarePlus size={16} strokeWidth={2.5} />
                 New Chat
               </span>
-              <kbd className="hidden sm:inline text-xs opacity-80 bg-white/20 px-2 py-0.5 rounded-md font-mono">
+              <kbd className="hidden sm:inline-flex items-center text-[10px] font-medium opacity-80 bg-white/20 px-1.5 py-0.5 rounded font-mono border border-white/10 relative z-10">
                 ⌘K
               </kbd>
             </button>
           </div>
 
+          {/* Search */}
+          <div className="px-3 pb-2">
+            <div className="relative group">
+              <Search
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors duration-200"
+              />
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-muted/50 border border-sidebar-border focus:border-primary/40 focus:ring-2 focus:ring-primary/10 focus:bg-card rounded-lg py-2 pl-9 pr-8 text-sm outline-none transition-all placeholder:text-muted-foreground/50 font-medium"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-0.5 rounded hover:bg-muted transition-colors"
+                >
+                  <X size={12} />
+                </button>
+              )}
+            </div>
+          </div>
+
           {/* Conversation list */}
-          <div className="flex-1 overflow-y-auto px-3 pb-3">
+          <div className="flex-1 overflow-y-auto px-2 pb-2">
             {conversations.length === 0 ? (
-              <div className="text-center py-10 text-[var(--muted-foreground)] text-sm">
+              <div className="text-center py-12 text-muted-foreground text-sm animate-fade-in">
                 <MessageSquare
-                  size={36}
-                  className="mx-auto mb-3 opacity-40"
+                  size={32}
+                  className="mx-auto mb-3 opacity-30"
                 />
-                <p className="font-medium">No conversations yet</p>
-                <p className="text-xs mt-1.5 opacity-75">Start a new chat to begin</p>
+                <p className="font-medium text-sm">No conversations yet</p>
+                <p className="text-xs mt-1 opacity-60">Start a new chat to begin</p>
+              </div>
+            ) : filteredConversations.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground text-sm animate-fade-in">
+                <Search size={32} className="mx-auto mb-3 opacity-20" />
+                <p className="font-medium text-sm">No results found</p>
+                <p className="text-xs mt-1 opacity-60">Try a different search term</p>
               </div>
             ) : (
-              <div className="space-y-1.5">
-                {conversations.map((conv) => {
-                  const isActive = conv.id === currentConversationId;
-                  const isHovered = conv.id === hoveredId;
-
-                  return (
-                    <div
-                      key={conv.id}
-                      className={`group relative flex items-center rounded-xl cursor-pointer transition-all ${
-                        isActive
-                          ? "bg-[var(--accent)] text-[var(--accent-foreground)] border-l-2 border-l-[var(--primary)]"
-                          : "hover:bg-[var(--muted)] text-[var(--foreground)] border-l-2 border-l-transparent"
-                      }`}
-                      onMouseEnter={() => setHoveredId(conv.id)}
-                      onMouseLeave={() => setHoveredId(null)}
-                      onClick={() => {
-                        onSelectConversation(conv.id);
-                        if (window.innerWidth < 768) onToggle();
-                      }}
-                    >
-                      <div className="flex-1 min-w-0 px-3.5 py-3">
-                        <div className="flex items-center gap-2">
-                          <ProviderBadge providerId={conv.provider} />
-                          <p className="text-sm font-medium truncate">
-                            {conv.title}
-                          </p>
-                        </div>
-                        <p className="text-xs text-[var(--muted-foreground)] mt-1 tracking-wide">
-                          {conv.messages.length} messages ·{" "}
-                          {formatTimeAgo(conv.updatedAt)}
-                        </p>
-                      </div>
-
-                      {/* Delete button */}
-                      {(isHovered || isActive) && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onDeleteConversation(conv.id);
-                          }}
-                          className="flex-shrink-0 p-2 mr-2 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--destructive)] hover:bg-[var(--muted)] transition-colors"
-                          aria-label="Delete conversation"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      )}
+              <div className="space-y-4">
+                {groupedConversations.map(([groupName, items]) => (
+                  <div key={groupName} className="animate-fade-in">
+                    <div className="flex items-center gap-2 px-2.5 mb-1.5">
+                      <h2 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                        {groupName}
+                      </h2>
+                      <div className="h-px flex-1 bg-sidebar-border/60" />
                     </div>
-                  );
-                })}
+                    <div className="space-y-0.5">
+                      {items.map((conv, index) => {
+                        const isActive = conv.id === currentConversationId;
+                        const isHovered = conv.id === hoveredId;
+                        const isEditing = conv.id === editingId;
+
+                        return (
+                          <div
+                            key={conv.id}
+                            className={`group relative flex items-center rounded-lg cursor-pointer transition-all duration-200 ${
+                              isActive
+                                ? "bg-primary/8 dark:bg-primary/10 border-l-2 border-primary"
+                                : "hover:bg-muted/60 border-l-2 border-transparent"
+                            }`}
+                            onMouseEnter={() => setHoveredId(conv.id)}
+                            onMouseLeave={() => setHoveredId(null)}
+                            onClick={() => {
+                              if (!isEditing) {
+                                onSelectConversation(conv.id);
+                                if (window.innerWidth < 768) onToggle();
+                              }
+                            }}
+                            onDoubleClick={(e) => handleStartEdit(e, conv)}
+                          >
+                            <div className="flex-1 min-w-0 px-3 py-2.5">
+                              {isEditing ? (
+                                <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                  <input
+                                    ref={editInputRef}
+                                    type="text"
+                                    value={editingTitle}
+                                    onChange={(e) => setEditingTitle(e.target.value)}
+                                    onBlur={() => handleSaveEdit()}
+                                    onKeyDown={handleKeyDown}
+                                    className="w-full bg-card border border-primary/50 rounded-md px-2 py-1 text-sm outline-none ring-2 ring-primary/10"
+                                  />
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleSaveEdit();
+                                    }}
+                                    className="p-1 rounded text-green-500 hover:bg-green-50 dark:hover:bg-green-500/10"
+                                  >
+                                    <Check size={14} />
+                                  </button>
+                                </div>
+                              ) : (
+                                <>
+                                  <div className="flex items-center gap-2">
+                                    <ProviderBadge providerId={conv.provider} />
+                                    <p className={`text-[13px] leading-tight font-medium truncate ${isActive ? "text-foreground" : "text-foreground/80"}`}>
+                                      {conv.title}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center gap-2 mt-1 text-[10px] text-muted-foreground/70">
+                                    <span className="flex items-center gap-1">
+                                      <MessageSquare size={10} className="opacity-60" strokeWidth={2.5} />
+                                      {conv.messages.length}
+                                    </span>
+                                    <span className="w-0.5 h-0.5 rounded-full bg-muted-foreground/30" />
+                                    <span className="truncate">{formatTimeAgo(conv.updatedAt)}</span>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+
+                            {/* Actions */}
+                            {!isEditing && (isHovered || isActive) && (
+                              <div className="flex items-center pr-2 gap-0.5 animate-fade-in">
+                                <button
+                                  onClick={(e) => handleStartEdit(e, conv)}
+                                  className="p-1.5 rounded-md text-muted-foreground/50 hover:text-primary hover:bg-muted transition-all"
+                                  aria-label="Edit title"
+                                >
+                                  <Edit2 size={12} />
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onDeleteConversation(conv.id);
+                                    addToast({
+                                      type: "info",
+                                      message: "Conversation deleted",
+                                      duration: 3000,
+                                    });
+                                  }}
+                                  className="p-1.5 rounded-md text-muted-foreground/50 hover:text-destructive hover:bg-muted transition-all"
+                                  aria-label="Delete conversation"
+                                >
+                                  <Trash2 size={12} />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
 
           {/* Footer with shortcuts */}
-          <div className="px-4 py-3.5 border-t border-[var(--sidebar-border)]">
+          <div className="px-3 py-3 border-t border-sidebar-border">
             <button
               onClick={() => setShowShortcuts(!showShortcuts)}
-              className="w-full flex items-center justify-center gap-2 text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors py-1"
+              className="w-full flex items-center justify-center gap-2 text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg active:scale-[0.98] transition-all py-2"
             >
-              <Keyboard size={14} />
-              Keyboard shortcuts
+              <Keyboard size={13} />
+              Shortcuts
             </button>
             {showShortcuts && (
-              <div className="mt-2.5 p-3.5 rounded-lg bg-[var(--muted)] text-xs space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="tracking-wide">New chat</span>
-                  <kbd
-                    className="px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)] font-mono text-[var(--muted-foreground)]"
-                    style={{ boxShadow: "var(--shadow-sm)" }}
-                  >
-                    ⌘K
-                  </kbd>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="tracking-wide">Toggle sidebar</span>
-                  <kbd
-                    className="px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)] font-mono text-[var(--muted-foreground)]"
-                    style={{ boxShadow: "var(--shadow-sm)" }}
-                  >
-                    ⌘B
-                  </kbd>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="tracking-wide">Send message</span>
-                  <kbd
-                    className="px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)] font-mono text-[var(--muted-foreground)]"
-                    style={{ boxShadow: "var(--shadow-sm)" }}
-                  >
-                    Enter
-                  </kbd>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="tracking-wide">New line</span>
-                  <kbd
-                    className="px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)] font-mono text-[var(--muted-foreground)]"
-                    style={{ boxShadow: "var(--shadow-sm)" }}
-                  >
-                    ⇧Enter
-                  </kbd>
-                </div>
+              <div className="mt-2 p-3 rounded-lg bg-muted/50 border border-sidebar-border text-[11px] space-y-2.5 animate-fade-in-down">
+                {[
+                  { label: "New chat", key: "⌘K" },
+                  { label: "Toggle sidebar", key: "⌘B" },
+                  { label: "Send message", key: "Enter" },
+                  { label: "New line", key: "⇧Enter" },
+                ].map((shortcut) => (
+                  <div key={shortcut.key} className="flex justify-between items-center">
+                    <span className="text-muted-foreground">{shortcut.label}</span>
+                    <kbd className="px-1.5 py-0.5 rounded bg-card border border-border font-mono text-foreground text-[10px] font-medium">
+                      {shortcut.key}
+                    </kbd>
+                  </div>
+                ))}
               </div>
             )}
           </div>

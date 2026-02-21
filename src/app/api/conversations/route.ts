@@ -33,6 +33,15 @@ const CreateConversationSchema = z.object({
   title: z.string().min(1, "Title is required"),
   provider: z.string().min(1, "Provider is required"),
   model: z.string().min(1, "Model is required"),
+  messages: z
+    .array(
+      z.object({
+        id: z.string().optional(),
+        role: z.enum(["user", "assistant", "system"]),
+        content: z.string(),
+      })
+    )
+    .optional(),
 });
 
 /**
@@ -54,7 +63,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { id, title, provider, model } = parseResult.data;
+    const { id, title, provider, model, messages } = parseResult.data;
 
     const conversation = await db.conversation.create({
       data: {
@@ -62,8 +71,18 @@ export async function POST(req: Request) {
         title,
         provider,
         model,
+        messages: messages
+          ? {
+              create: messages.map((m) => ({
+                ...(m.id ? { id: m.id } : {}),
+                role: m.role,
+                content: m.content,
+              })),
+            }
+          : undefined,
       },
       include: {
+        messages: true,
         _count: { select: { messages: true } },
       },
     });
