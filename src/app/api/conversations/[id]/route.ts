@@ -96,30 +96,35 @@ export async function PUT(
     if (provider !== undefined) updateData.provider = provider;
     if (model !== undefined) updateData.model = model;
 
-    // If messages are provided, replace all messages (delete existing + create new)
-    if (messages !== undefined) {
-      await db.message.deleteMany({ where: { conversationId: id } });
+    const conversation = await db.$transaction(async (tx) => {
+      // If messages are provided, replace all messages (delete existing + create new)
+      if (messages !== undefined) {
+        await tx.message.deleteMany({ where: { conversationId: id } });
 
-      if (messages.length > 0) {
-        await db.message.createMany({
-          data: messages.map((m) => ({
-            ...(m.id ? { id: m.id } : {}),
-            role: m.role,
-            content: m.content,
-            conversationId: id,
-          })),
-        });
+        if (messages.length > 0) {
+          await tx.message.createMany({
+            data: messages.map((m) => ({
+              ...(m.id ? { id: m.id } : {}),
+              role: m.role,
+              content: m.content,
+              conversationId: id,
+            })),
+          });
+        }
+        
+        // Force updatedAt change if only messages were updated
+        updateData.updatedAt = new Date();
       }
-    }
 
-    const conversation = await db.conversation.update({
-      where: { id },
-      data: updateData,
-      include: {
-        messages: {
-          orderBy: { createdAt: "asc" },
+      return await tx.conversation.update({
+        where: { id },
+        data: updateData,
+        include: {
+          messages: {
+            orderBy: { createdAt: "asc" },
+          },
         },
-      },
+      });
     });
 
     return Response.json(conversation);
