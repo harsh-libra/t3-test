@@ -56,14 +56,13 @@ export default function ChatInput({
 
   return (
     <div
-      className="border-t border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-md px-4 py-6 md:px-6 transition-all duration-300 sticky bottom-0 z-30"
-      style={{ boxShadow: "0 -4px 12px -1px rgba(0, 0, 0, 0.05)" }}
+      className="px-4 py-6 md:px-6 transition-all duration-300 sticky bottom-0 z-30 bg-gradient-to-t from-[var(--background)] via-[var(--background)] to-transparent"
     >
       <form
         onSubmit={onSubmit}
-        className="max-w-[52rem] mx-auto flex items-end gap-3"
+        className="max-w-[52rem] mx-auto flex items-end gap-3 relative"
       >
-        <div className="flex-1 relative group/input">
+        <div className="flex-1 relative group/input shadow-2xl shadow-indigo-500/10 rounded-[2rem]">
           {provider && (
             <div className="absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none transition-all duration-300 group-focus-within/input:opacity-0 group-focus-within/input:-translate-x-4">
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[var(--muted)] border border-[var(--border)]/50 backdrop-blur-sm shadow-sm">
@@ -80,7 +79,7 @@ export default function ChatInput({
             placeholder={placeholder}
             rows={1}
             disabled={isLoading}
-            className={`w-full resize-none rounded-[2rem] border border-[var(--input-border)] bg-[var(--input-bg)] py-4 pr-14 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/20 focus:border-[var(--primary)]/40 focus:shadow-[0_8px_30px_-10px_rgba(0,0,0,0.1)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${provider ? 'pl-20 focus:pl-6' : 'pl-6'}`}
+            className={`w-full resize-none rounded-[2rem] border-2 border-[var(--input-border)] bg-[var(--input-bg)] py-4 pr-14 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-4 focus:ring-[var(--primary)]/10 focus:border-[var(--primary)]/60 focus:shadow-[0_8px_30px_-10px_rgba(0,0,0,0.1)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${provider ? 'pl-20 focus:pl-6' : 'pl-6'}`}
             style={{
               minHeight: "60px",
               maxHeight: "200px",

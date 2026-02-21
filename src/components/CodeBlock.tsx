@@ -46,9 +46,9 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language = "text", children }) =>
 
   return (
     <div
-      className="relative group my-6 rounded-xl overflow-hidden border border-[var(--border)] bg-[var(--card)] transition-all duration-300 shadow-sm hover:shadow-lg hover:border-[var(--primary)]/30"
+      className="relative group my-8 rounded-2xl overflow-hidden border border-[var(--border)] bg-[var(--card)] transition-all duration-300 shadow-md hover:shadow-2xl hover:border-[var(--primary)]/40"
     >
-      <div className="flex items-center justify-between px-4 py-2.5 text-xs font-semibold bg-slate-50/80 dark:bg-slate-900/80 text-[var(--muted-foreground)] border-b border-[var(--border)] backdrop-blur-sm transition-colors duration-200">
+      <div className="flex items-center justify-between px-5 py-3 text-xs font-bold bg-slate-50/90 dark:bg-slate-900/90 text-[var(--muted-foreground)] border-b border-[var(--border)] backdrop-blur-sm transition-colors duration-200 uppercase tracking-widest">
         <div className="flex items-center gap-2.5">
           <div className="p-1 rounded bg-[var(--primary)]/10 text-[var(--primary)]">
             <Icon size={14} />

@@ -64,16 +64,18 @@ function ToastItem({
 
   return (
     <div
-      className={`flex items-center gap-3 px-5 py-4 rounded-xl border ${borderColors[toast.type]} border-l-[3px] ${accentBg[toast.type]} bg-[var(--card)] text-[var(--card-foreground)] animate-in slide-in-from-right fade-in duration-300 ${isExiting ? 'opacity-0 translate-x-4 transition-all duration-200' : ''}`}
-      style={{ boxShadow: "var(--shadow-lg)" }}
+      className={`flex items-center gap-4 px-6 py-4 rounded-2xl border ${borderColors[toast.type]} bg-white/80 dark:bg-slate-900/80 backdrop-blur-md text-[var(--foreground)] animate-in slide-in-from-right-10 fade-in duration-500 shadow-2xl ${isExiting ? 'opacity-0 scale-95 transition-all duration-300' : ''}`}
+      style={{ boxShadow: "var(--shadow-xl)" }}
     >
-      {icons[toast.type]}
-      <p className="text-sm flex-1 leading-relaxed">{toast.message}</p>
+      <div className="flex-shrink-0">
+        {icons[toast.type]}
+      </div>
+      <p className="text-[0.9375rem] font-medium flex-1 leading-snug">{toast.message}</p>
       <button
         onClick={handleRemove}
         className="p-1.5 rounded-lg hover:bg-[var(--muted)] hover:scale-110 active:scale-90 transition-all duration-150 text-[var(--muted-foreground)] flex-shrink-0"
       >
-        <X size={14} />
+        <X size={16} />
       </button>
     </div>
   );

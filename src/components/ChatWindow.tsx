@@ -151,7 +151,7 @@ export default function ChatWindow({
     <div className="flex flex-col h-full">
       {/* Header */}
       <div
-        className="flex items-center justify-between px-5 md:px-6 py-3 border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-30 transition-all duration-300"
+        className="flex items-center justify-between px-5 md:px-8 py-4 border-b border-border bg-background/80 backdrop-blur-xl sticky top-0 z-30 transition-all duration-300"
         style={{ boxShadow: "var(--shadow-sm)" }}
       >
         <div className="flex items-center gap-3 md:gap-4">
@@ -225,15 +225,15 @@ export default function ChatWindow({
                 <button
                   key={suggestion.text}
                   onClick={() => setInput(`${suggestion.title} ${suggestion.text}`)}
-                  className={`group p-5 rounded-3xl border border-border bg-card text-card-foreground hover:bg-muted hover:border-[var(--primary)]/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left flex flex-col gap-4 active:scale-[0.97] animate-fade-in-up`}
+                  className={`group p-6 rounded-[2rem] border border-border bg-card text-card-foreground hover:bg-muted hover:border-[var(--primary)]/30 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 text-left flex flex-col gap-4 active:scale-[0.97] animate-fade-in-up`}
                   style={{ animationDelay: `${400 + (i * 50)}ms` }}
                 >
-                  <div className={`w-12 h-12 rounded-2xl ${suggestion.color} flex items-center justify-center text-2xl group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 shadow-sm`}>
+                  <div className={`w-14 h-14 rounded-2xl ${suggestion.color} flex items-center justify-center text-3xl group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500 shadow-md`}>
                     {suggestion.icon}
                   </div>
                   <div>
-                    <span className="font-bold block text-base group-hover:text-[var(--primary)] transition-colors mb-1">{suggestion.title}</span>
-                    <span className="text-muted-foreground text-sm leading-snug line-clamp-2">{suggestion.text}</span>
+                    <span className="font-extrabold block text-lg group-hover:text-[var(--primary)] transition-colors mb-1">{suggestion.title}</span>
+                    <span className="text-muted-foreground text-[0.8125rem] leading-relaxed line-clamp-2">{suggestion.text}</span>
                   </div>
                 </button>
               ))}

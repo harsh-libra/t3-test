@@ -82,7 +82,7 @@ export default function ModelSelector({
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--card-foreground)] hover:border-[var(--primary)]/30 hover:shadow-md transition-all active:scale-[0.97] text-sm font-semibold group ${isOpen ? 'ring-2 ring-[var(--primary)]/20 border-[var(--primary)]/30' : ''}`}
+        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[var(--border)] bg-white/80 dark:bg-slate-900/80 backdrop-blur-md text-[var(--foreground)] hover:border-[var(--primary)]/30 hover:shadow-md transition-all active:scale-[0.97] text-sm font-semibold group ${isOpen ? 'ring-2 ring-[var(--primary)]/20 border-[var(--primary)]/30' : ''}`}
         style={{ boxShadow: "var(--shadow-sm)" }}
         disabled={loading}
       >

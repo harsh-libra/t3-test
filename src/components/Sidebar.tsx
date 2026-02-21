@@ -187,10 +187,10 @@ export default function Sidebar({
               <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors pointer-events-none" />
               <div className="absolute -inset-1 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
               <span className="flex items-center gap-2.5 relative z-10">
-                <MessageSquarePlus size={19} strokeWidth={2.5} className="group-hover:rotate-6 transition-transform duration-300" />
+                <MessageSquarePlus size={19} strokeWidth={2.5} className="group-hover:rotate-6 transition-transform duration-500" />
                 New Chat
               </span>
-              <kbd className="hidden sm:inline-flex items-center text-[10px] font-bold opacity-90 bg-black/10 dark:bg-white/20 px-2 py-0.5 rounded-md font-mono border border-white/20 relative z-10 shadow-sm">
+              <kbd className="hidden sm:inline-flex items-center text-[10px] font-bold opacity-90 bg-white/20 dark:bg-black/20 px-2 py-0.5 rounded-md font-mono border border-white/20 relative z-10 shadow-sm backdrop-blur-sm">
                 ⌘K
               </kbd>
             </button>
@@ -208,7 +208,7 @@ export default function Sidebar({
                 placeholder="Search conversations..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[var(--muted)]/50 border border-[var(--sidebar-border)] focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/10 focus:bg-[var(--card)] rounded-xl py-2.5 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-[var(--muted-foreground)]/50 font-medium"
+                className="w-full bg-[var(--muted)]/50 border border-[var(--sidebar-border)] focus:border-[var(--primary)]/50 focus:ring-4 focus:ring-[var(--primary)]/5 focus:bg-[var(--card)] rounded-xl py-2.5 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-[var(--muted-foreground)]/60 font-medium shadow-sm"
               />
               {searchQuery && (
                 <button
@@ -259,7 +259,7 @@ export default function Sidebar({
                             key={conv.id}
                             className={`group relative flex items-center rounded-xl cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] animate-fade-in-up border ${
                               isActive
-                                ? "bg-[var(--card)] shadow-[0_4px_12px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.3)] border-[var(--sidebar-border)] scale-[1.02] z-10"
+                                ? "bg-white dark:bg-slate-900 shadow-md border-[var(--sidebar-border)] scale-[1.02] z-10"
                                 : "hover:bg-[var(--muted)]/60 border-transparent hover:border-[var(--sidebar-border)]/50"
                             }`}
                             style={{ 

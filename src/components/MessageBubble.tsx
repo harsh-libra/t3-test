@@ -41,10 +41,10 @@ const MessageBubble = memo(function MessageBubble({
       }`}
     >
       <div
-        className={`flex-shrink-0 w-8 h-8 md:w-9 md:h-9 rounded-xl flex items-center justify-center mt-1 animate-scale-in shadow-sm transition-transform duration-200 hover:scale-110 ${
+        className={`flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-2xl flex items-center justify-center mt-1 animate-scale-in shadow-md transition-all duration-300 hover:scale-110 hover:rotate-3 ${
           isUser
             ? "bg-linear-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 border border-[var(--border)] text-[var(--foreground)]"
-            : "bg-linear-to-br from-indigo-500 via-indigo-600 to-violet-700 text-white shadow-indigo-500/20"
+            : "bg-linear-to-br from-indigo-500 via-indigo-600 to-violet-700 text-white shadow-lg shadow-indigo-500/25"
         }`}
       >
         {isUser ? (
@@ -63,8 +63,8 @@ const MessageBubble = memo(function MessageBubble({
         <div
           className={`relative px-4 md:px-6 py-3 md:py-4 transition-all duration-300 shadow-sm ${
             isUser
-              ? "bg-linear-to-br from-indigo-600 to-indigo-700 text-white rounded-2xl rounded-tr-none hover:shadow-md"
-              : "backdrop-blur-md bg-white/90 dark:bg-slate-900/90 text-[var(--assistant-bubble-text)] rounded-2xl rounded-tl-none border border-[var(--border)]/80 hover:shadow-md hover:border-[var(--border)]"
+              ? "bg-linear-to-br from-indigo-600 via-indigo-700 to-violet-800 text-white rounded-3xl rounded-tr-none hover:shadow-lg hover:shadow-indigo-500/20"
+              : "backdrop-blur-md bg-white/90 dark:bg-slate-900/90 text-[var(--assistant-bubble-text)] rounded-3xl rounded-tl-none border border-[var(--border)]/80 hover:shadow-lg hover:border-[var(--border)]"
           }`}
         >
           {isUser ? (
