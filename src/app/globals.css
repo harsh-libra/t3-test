@@ -28,6 +28,14 @@
   --color-assistant-bubble-text: var(--assistant-bubble-text);
   --color-input-bg: var(--input-bg);
   --color-input-border: var(--input-border);
+  
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  
+  --transition-fast: var(--transition-fast);
+  --transition-normal: var(--transition-normal);
+  --transition-slow: var(--transition-slow);
 }
 
 /* ─── Type Scale ─── */
@@ -38,26 +46,31 @@
   --font-lg: 1rem;
   --font-xl: 1.25rem;
   --font-2xl: 1.5rem;
+  
+  /* Standard Transitions */
+  --transition-fast: 100ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ─── Light Theme ─── */
 :root {
   /* Backgrounds */
-  --background: #fafbfc;
-  --foreground: #111827;
-  --muted: #f1f3f5;
-  --muted-foreground: #6b7280;
-  --border: #e5e7eb;
+  --background: #fcfcfd;
+  --foreground: #101828;
+  --muted: #f2f4f7;
+  --muted-foreground: #667085;
+  --border: #e4e7ec;
   --card: #ffffff;
-  --card-foreground: #111827;
+  --card-foreground: #101828;
 
-  /* Primary — refined indigo */
+  /* Primary — indigo-600 */
   --primary: #4f46e5;
   --primary-foreground: #ffffff;
 
-  /* Accent — richer active-state feel */
-  --accent: #eef2ff;
-  --accent-foreground: #3730a3;
+  /* Accent — indigo-50 */
+  --accent: #f5f3ff;
+  --accent-foreground: #4f46e5;
 
   /* Destructive */
   --destructive: #ef4444;
@@ -65,83 +78,83 @@
   /* Ring */
   --ring: #4f46e5;
 
-  /* Sidebar — warm, differentiated from main bg */
-  --sidebar-bg: #f3f4f6;
-  --sidebar-border: #e5e7eb;
+  /* Sidebar — slate-50 */
+  --sidebar-bg: #f9fafb;
+  --sidebar-border: #eaecf0;
 
   /* Chat bubbles */
   --user-bubble: #4f46e5;
   --user-bubble-text: #ffffff;
-  --assistant-bubble: #f8f9fb;
-  --assistant-bubble-text: #1f2937;
+  --assistant-bubble: #ffffff;
+  --assistant-bubble-text: #101828;
 
   /* Input */
   --input-bg: #ffffff;
-  --input-border: #d1d5db;
+  --input-border: #d0d5dd;
 
   /* Scrollbar */
-  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-thumb: #d1d5db;
   --scrollbar-track: transparent;
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+  --shadow-md: 0 4px 8px -2px rgba(16, 24, 40, 0.1), 0 2px 4px -2px rgba(16, 24, 40, 0.06);
+  --shadow-lg: 0 12px 16px -4px rgba(16, 24, 40, 0.08), 0 4px 6px -2px rgba(16, 24, 40, 0.03);
 
   /* Gradient */
-  --gradient-primary: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #818cf8 100%);
+  --gradient-primary: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #c026d3 100%);
 }
 
 /* ─── Dark Theme ─── */
 .dark {
-  /* Backgrounds — softer, with blue undertones */
-  --background: #12121a;
-  --foreground: #f0f0f4;
-  --muted: #1e1e2a;
-  --muted-foreground: #9ca3b0;
-  --border: #2a2a3a;
-  --card: #1a1a26;
-  --card-foreground: #f0f0f4;
+  /* Backgrounds — deep slate */
+  --background: #0b0f1a;
+  --foreground: #f9fafb;
+  --muted: #1f2937;
+  --muted-foreground: #9ca3af;
+  --border: #2d3748;
+  --card: #111827;
+  --card-foreground: #f9fafb;
 
-  /* Primary — brighter for dark bg */
-  --primary: #818cf8;
+  /* Primary — indigo-500 */
+  --primary: #6366f1;
   --primary-foreground: #ffffff;
 
-  /* Accent — deep indigo */
-  --accent: #252540;
-  --accent-foreground: #a5b4fc;
+  /* Accent — slate-800 */
+  --accent: #1f2937;
+  --accent-foreground: #f9fafb;
 
   /* Destructive */
-  --destructive: #dc2626;
+  --destructive: #ef4444;
 
   /* Ring */
-  --ring: #818cf8;
+  --ring: #6366f1;
 
-  /* Sidebar — subtle distinction from main bg */
-  --sidebar-bg: #151520;
-  --sidebar-border: #2a2a3a;
+  /* Sidebar — midnight slate */
+  --sidebar-bg: #030712;
+  --sidebar-border: #1f2937;
 
   /* Chat bubbles */
-  --user-bubble: #6366f1;
+  --user-bubble: #4f46e5;
   --user-bubble-text: #ffffff;
-  --assistant-bubble: #1e1e2c;
-  --assistant-bubble-text: #e5e5ec;
+  --assistant-bubble: #1f2937;
+  --assistant-bubble-text: #f9fafb;
 
   /* Input */
-  --input-bg: #1a1a26;
-  --input-border: #363646;
+  --input-bg: #111827;
+  --input-border: #374151;
 
   /* Scrollbar */
-  --scrollbar-thumb: #3f3f50;
+  --scrollbar-thumb: #374151;
   --scrollbar-track: transparent;
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.35), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -2px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
 
   /* Gradient */
-  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #818cf8 50%, #a5b4fc 100%);
+  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
 }
 
 /* Removed custom * { padding: 0; margin: 0; } reset — Tailwind v4's Preflight 
@@ -167,7 +180,8 @@ body {
 
 /* ─── Custom Scrollbar ─── */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -176,11 +190,34 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: var(--scrollbar-thumb);
-  border-radius: 3px;
+  border-radius: 10px;
+  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
+}
+
+/* ─── UI Utilities ─── */
+.hover-glow {
+  transition: all var(--transition-normal);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px -5px var(--primary);
+  transform: translateY(-1px);
+}
+
+/* Assistant bubble glassy effect in dark mode */
+.assistant-bubble {
+  background-color: var(--assistant-bubble);
+}
+
+.dark .assistant-bubble {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
 /* ─── Markdown / Prose Styling ─── */
@@ -266,8 +303,7 @@ body {
   font-size: 1.75rem;
   margin-top: 2rem;
   margin-bottom: 1rem;
-  font-weight: 800;
-  letter-spacing: -0.025em;
+  font-weight: 700;
   line-height: 1.2;
 }
 
@@ -275,8 +311,7 @@ body {
   font-size: 1.5rem;
   margin-top: 1.75rem;
   margin-bottom: 0.875rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 600;
   line-height: 1.3;
 }
 
@@ -284,21 +319,37 @@ body {
   font-size: 1.25rem;
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-weight: 500;
   line-height: 1.4;
+}
+
+.prose strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
 }
 
 .prose a {
   color: var(--primary);
   text-decoration: underline;
   text-underline-offset: 2px;
+  transition: all 0.2s ease;
+}
+
+.prose a:hover {
+  opacity: 0.8;
+  text-decoration-thickness: 2px;
 }
 
 .prose blockquote {
-  border-left: 4px solid var(--primary);
-  padding: 0.75rem 1.25rem;
-  background: color-mix(in srgb, var(--primary), transparent 94%);
+  border-left: 3px solid var(--primary);
+  padding: 0.5rem 1rem;
+  background: var(--muted);
   color: var(--foreground);
   margin: 1.5rem 0;
   font-style: italic;
@@ -314,15 +365,10 @@ body {
 
 .prose tr {
   border-bottom: 1px solid var(--border);
-  transition: background-color 0.1s ease;
 }
 
 .prose tr:last-child {
   border-bottom: none;
-}
-
-.prose tr:hover {
-  background: var(--muted);
 }
 
 .prose th {
@@ -337,7 +383,195 @@ body {
   text-align: left;
 }
 
+/* ─── Keyframe Animations ─── */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes subtleBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes typingDot {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes messagePop {
+  from {
+    transform: scale(0.97);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; transform: scale(0.98); }
+}
+
+/* ─── Animation Utility Classes ─── */
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out both;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out both;
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.3s ease-out both;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s ease-out both;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.2s ease-out both;
+}
+
+.animate-message-pop {
+  animation: messagePop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s infinite ease-in-out;
+}
+
+.animate-typing-dot {
+  animation: typingDot 1.4s infinite ease-in-out;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, var(--muted) 25%, var(--border) 50%, var(--muted) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ─── Stagger Delay Utilities ─── */
+
+.animation-delay-75 {
+  animation-delay: 75ms;
+}
+
+.animation-delay-150 {
+  animation-delay: 150ms;
+}
+
+.animation-delay-225 {
+  animation-delay: 225ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+
 /* ─── Smooth Transitions ─── */
 .transition-theme {
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+/* ─── Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

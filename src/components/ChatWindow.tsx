@@ -5,7 +5,7 @@ import { useChat } from "@ai-sdk/react";
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 import ModelSelector from "./ModelSelector";
-import { MessageSquarePlus, Loader2, Menu, AlertTriangle } from "lucide-react";
+import { MessageSquarePlus, Loader2, Menu, AlertTriangle, ArrowDown, Plus, Sparkles } from "lucide-react";
 import type { Conversation } from "@/types";
 
 interface ChatWindowProps {
@@ -29,6 +29,7 @@ export default function ChatWindow({
 }: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   // Persist provider/model selection
   const [selectedProvider, setSelectedProvider] = useState<string>(() => {
@@ -65,6 +66,7 @@ export default function ChatWindow({
     stop,
     setMessages,
     error,
+    reload,
   } = useChat({
     api: "/api/chat",
     body: {
@@ -120,18 +122,39 @@ export default function ChatWindow({
   }, [conversation?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-scroll to bottom
+  const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
+    messagesEndRef.current?.scrollIntoView({ behavior });
+  }, []);
+
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
+
+  // Handle scroll to show/hide scroll-to-bottom button
+  const handleScroll = useCallback(() => {
+    if (scrollContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+      const isScrolledUp = scrollHeight - scrollTop - clientHeight > 300;
+      setShowScrollButton(isScrolledUp);
+    }
+  }, []);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+      return () => container.removeEventListener("scroll", handleScroll);
+    }
+  }, [handleScroll]);
 
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
       <div
-        className="flex items-center justify-between px-5 md:px-6 py-3.5 border-b border-border bg-background"
-        style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}
+        className="flex items-center justify-between px-5 md:px-6 py-3 border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-30 transition-all duration-300"
+        style={{ boxShadow: "var(--shadow-sm)" }}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 md:gap-4">
           {/* Sidebar toggle for desktop */}
           <button
             onClick={onToggleSidebar}
@@ -140,62 +163,78 @@ export default function ChatWindow({
           >
             <Menu size={18} />
           </button>
-          <ModelSelector
-            selectedProvider={selectedProvider}
-            selectedModel={selectedModel}
-            onSelect={handleModelSelect}
-          />
+          
+          <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
+            <ModelSelector
+              selectedProvider={selectedProvider}
+              selectedModel={selectedModel}
+              onSelect={handleModelSelect}
+            />
+            <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold uppercase tracking-wider border border-emerald-500/20 shadow-sm transition-all duration-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+              Model: {selectedModel}
+            </div>
+          </div>
         </div>
-        <button
-          onClick={onNewChat}
-          className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted border border-transparent hover:border-border transition-all"
-          aria-label="New chat"
-        >
-          <MessageSquarePlus size={18} />
-          <span className="hidden sm:inline">New Chat</span>
-        </button>
+        
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onNewChat}
+            className="flex items-center gap-2 px-3 md:px-4 py-2 md:py-2.5 rounded-xl text-sm font-medium bg-muted/50 text-foreground hover:bg-muted border border-border/50 hover:border-border transition-all active:scale-95 group"
+            aria-label="New chat"
+          >
+            <Plus size={18} className="text-[var(--primary)] group-hover:rotate-90 transition-transform duration-300" />
+            <span className="hidden sm:inline">New Chat</span>
+          </button>
+        </div>
       </div>
 
       {/* Messages area */}
       <div ref={scrollContainerRef} className="flex-1 overflow-y-auto">
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center px-4">
+          <div className="flex flex-col items-center justify-center min-h-full py-12 px-4">
             <div
-              className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 relative"
+              className="w-20 h-20 rounded-3xl flex items-center justify-center mb-8 relative animate-scale-in"
               style={{ background: "var(--gradient-primary)" }}
             >
               {/* Soft glow behind icon */}
               <div
-                className="absolute inset-0 rounded-2xl opacity-30 blur-xl"
+                className="absolute inset-0 rounded-3xl opacity-40 blur-2xl animate-pulse"
                 style={{ background: "var(--gradient-primary)" }}
               />
               <MessageSquarePlus size={38} className="text-white relative z-10" />
             </div>
-            <h2 className="text-2xl font-bold text-foreground mb-3 tracking-tight">
+            
+            <h2 className="text-3xl font-extrabold text-foreground mb-3 tracking-tight animate-fade-in-up animation-delay-150">
               T3 Chat
             </h2>
-            <p className="text-muted-foreground max-w-md mb-8 leading-relaxed">
-              Start a conversation with any AI model. Select your preferred
-              provider and model from the dropdown above.
+            <p className="text-muted-foreground max-w-md mb-10 leading-relaxed text-center animate-fade-in-up animation-delay-225">
+              Your intelligent companion for brainstorming, coding, and learning. 
+              Choose a model above to start.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-lg">
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-3xl w-full animate-fade-in-up animation-delay-300 px-4 md:px-0">
               {[
-                { text: "Explain quantum computing", icon: "🔬" },
-                { text: "Write a Python script", icon: "🐍" },
-                { text: "Help me brainstorm ideas", icon: "💡" },
-              ].map((suggestion) => (
+                { title: "Explain", text: "quantum computing like I'm five", icon: "🔬", color: "bg-blue-500/10 text-blue-600 dark:text-blue-400" },
+                { title: "Write", text: "a professional email to my boss", icon: "📧", color: "bg-purple-500/10 text-purple-600 dark:text-purple-400" },
+                { title: "Analyze", text: "the pros and cons of remote work", icon: "📊", color: "bg-amber-500/10 text-amber-600 dark:text-amber-400" },
+                { title: "Create", text: "a workout plan for beginners", icon: "💪", color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
+                { title: "Brainstorm", text: "creative names for my new startup", icon: "💡", color: "bg-rose-500/10 text-rose-600 dark:text-rose-400" },
+                { title: "Summarize", text: "key points of the latest AI news", icon: "📝", color: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400" },
+              ].map((suggestion, i) => (
                 <button
                   key={suggestion.text}
-                  onClick={() => {
-                    setInput(suggestion.text);
-                  }}
-                  className="p-4 rounded-xl border border-border bg-card text-card-foreground hover:bg-muted transition-all text-sm text-left hover:border-[var(--primary)]/30"
-                  style={{ boxShadow: "var(--shadow-sm)" }}
+                  onClick={() => setInput(`${suggestion.title} ${suggestion.text}`)}
+                  className={`group p-5 rounded-3xl border border-border bg-card text-card-foreground hover:bg-muted hover:border-[var(--primary)]/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left flex flex-col gap-4 active:scale-[0.97] animate-fade-in-up`}
+                  style={{ animationDelay: `${400 + (i * 50)}ms` }}
                 >
-                  <span className="text-xl mb-2 block">
+                  <div className={`w-12 h-12 rounded-2xl ${suggestion.color} flex items-center justify-center text-2xl group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 shadow-sm`}>
                     {suggestion.icon}
-                  </span>
-                  <span className="font-medium">{suggestion.text}</span>
+                  </div>
+                  <div>
+                    <span className="font-bold block text-base group-hover:text-[var(--primary)] transition-colors mb-1">{suggestion.title}</span>
+                    <span className="text-muted-foreground text-sm leading-snug line-clamp-2">{suggestion.text}</span>
+                  </div>
                 </button>
               ))}
             </div>
@@ -212,6 +251,12 @@ export default function ChatWindow({
                   index === messages.length - 1 &&
                   message.role === "assistant"
                 }
+                onRegenerate={reload}
+                showRegenerate={
+                  !isLoading &&
+                  index === messages.length - 1 &&
+                  message.role === "assistant"
+                }
               />
             ))}
             {isLoading &&
@@ -223,15 +268,9 @@ export default function ChatWindow({
                   </div>
                   <div className="rounded-2xl rounded-bl-md bg-assistant-bubble px-5 py-3.5 border border-[var(--border)]/50">
                     <div className="flex items-center gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-muted-foreground/60 animate-bounce" />
-                      <span
-                        className="w-2.5 h-2.5 rounded-full bg-muted-foreground/60 animate-bounce"
-                        style={{ animationDelay: "0.1s" }}
-                      />
-                      <span
-                        className="w-2.5 h-2.5 rounded-full bg-muted-foreground/60 animate-bounce"
-                        style={{ animationDelay: "0.2s" }}
-                      />
+                      <span className="w-2 h-2 rounded-full bg-muted-foreground/60 animate-typing-dot" />
+                      <span className="w-2 h-2 rounded-full bg-muted-foreground/60 animate-typing-dot animation-delay-150" />
+                      <span className="w-2 h-2 rounded-full bg-muted-foreground/60 animate-typing-dot animation-delay-300" />
                     </div>
                   </div>
                 </div>
@@ -256,6 +295,18 @@ export default function ChatWindow({
             <div ref={messagesEndRef} className="h-4" />
           </div>
         )}
+
+        {showScrollButton && (
+          <div className="sticky bottom-4 right-0 left-0 flex justify-center pointer-events-none">
+            <button
+              onClick={() => scrollToBottom()}
+              className="pointer-events-auto p-2.5 rounded-full bg-[var(--background)] border border-[var(--border)] shadow-xl text-[var(--foreground)] hover:bg-[var(--muted)] hover:scale-110 active:scale-90 transition-all z-20 animate-scale-in"
+              aria-label="Scroll to bottom"
+            >
+              <ArrowDown size={18} />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Input area */}
@@ -265,6 +316,8 @@ export default function ChatWindow({
         onSubmit={handleSubmit}
         onStop={stop}
         isLoading={isLoading}
+        provider={selectedProvider}
+        model={selectedModel}
       />
     </div>
   );
