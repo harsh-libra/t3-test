@@ -97,3 +97,45 @@ function saveAll(conversations: Conversation[]): void {
 export function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
 }
+
+/**
+ * Group conversations by date
+ */
+export function groupConversations(conversations: Conversation[]) {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const today = now.getTime();
+
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayTime = yesterday.getTime();
+
+  const last7Days = new Date(today);
+  last7Days.setDate(last7Days.getDate() - 7);
+  const last7DaysTime = last7Days.getTime();
+
+  const groups: { [key: string]: Conversation[] } = {
+    Today: [],
+    Yesterday: [],
+    "Last 7 Days": [],
+    Older: [],
+  };
+
+  conversations.forEach((conv) => {
+    const convDate = new Date(conv.updatedAt);
+    convDate.setHours(0, 0, 0, 0);
+    const convTime = convDate.getTime();
+
+    if (convTime === today) {
+      groups.Today.push(conv);
+    } else if (convTime === yesterdayTime) {
+      groups.Yesterday.push(conv);
+    } else if (convTime >= last7DaysTime) {
+      groups["Last 7 Days"].push(conv);
+    } else {
+      groups.Older.push(conv);
+    }
+  });
+
+  return Object.entries(groups).filter(([_, items]) => items.length > 0);
+}

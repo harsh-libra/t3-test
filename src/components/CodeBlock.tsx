@@ -46,33 +46,42 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language = "text", children }) =>
 
   return (
     <div
-      className="relative group my-4 rounded-xl overflow-hidden border border-[var(--border)] bg-[var(--card)] transition-all duration-200"
-      style={{ boxShadow: "var(--shadow-sm)" }}
+      className="relative group my-8 rounded-2xl overflow-hidden border border-[var(--border)] bg-[var(--card)] transition-all duration-300 shadow-md hover:shadow-2xl hover:border-[var(--primary)]/40"
     >
-      <div className="flex items-center justify-between px-4 py-2 text-xs font-medium bg-[var(--muted)]/50 text-[var(--muted-foreground)] border-b border-[var(--border)] transition-colors duration-200">
-        <div className="flex items-center gap-2">
-          <Icon size={14} className="text-[var(--primary)]" />
-          <span className="capitalize">{language}</span>
+      <div className="flex items-center justify-between px-5 py-3 text-xs font-bold bg-slate-50/90 dark:bg-slate-900/90 text-[var(--muted-foreground)] border-b border-[var(--border)] backdrop-blur-sm transition-colors duration-200 uppercase tracking-widest">
+        <div className="flex items-center gap-2.5">
+          <div className="p-1 rounded bg-[var(--primary)]/10 text-[var(--primary)]">
+            <Icon size={14} />
+          </div>
+          <span className="capitalize tracking-wide">{language}</span>
         </div>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 hover:text-[var(--foreground)] transition-colors px-2 py-1 rounded-md hover:bg-[var(--background)]"
+          className={`flex items-center gap-1.5 transition-all duration-200 px-2.5 py-1 rounded-md opacity-0 group-hover:opacity-100 ${
+            copied 
+              ? "bg-green-500/10 text-green-600 dark:text-green-400" 
+              : "hover:bg-[var(--muted)] hover:text-[var(--foreground)]"
+          }`}
           aria-label="Copy code"
         >
-          {copied ? (
-            <>
-              <Check size={14} className="text-green-500" />
-              <span>Copied</span>
-            </>
-          ) : (
-            <>
-              <Copy size={14} />
-              <span>Copy</span>
-            </>
-          )}
+          <span key={copied ? 'check' : 'copy'} className="flex items-center gap-1.5">
+            {copied ? (
+              <>
+                <Check size={14} className="animate-scale-in" />
+                <span className="animate-fade-in">Copied!</span>
+              </>
+            ) : (
+              <>
+                <Copy size={14} />
+                <span>Copy</span>
+              </>
+            )}
+          </span>
         </button>
       </div>
-      <div className="relative font-mono transition-colors duration-200">
+      <div className={`relative font-mono transition-colors duration-200 ${
+        mounted && resolvedTheme === "light" ? "bg-slate-50/50" : "bg-[#282c34]"
+      }`}>
         <SyntaxHighlighter
           style={currentTheme}
           language={language}
