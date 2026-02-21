@@ -98,7 +98,7 @@ export default function ModelSelector({
 
       {isOpen && (
         <div
-          className="absolute top-full left-0 mt-2 w-80 rounded-xl border border-[var(--border)] bg-[var(--card)] z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
+          className="absolute top-full left-0 mt-2 w-[calc(100vw-2rem)] sm:w-80 rounded-2xl border border-[var(--border)] bg-[var(--card)] z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
           style={{ boxShadow: "var(--shadow-lg)" }}
         >
           <div className="p-2.5">
@@ -109,7 +109,7 @@ export default function ModelSelector({
                   <ProviderIcon providerId={provider.id} />
                   {provider.name}
                   {!provider.available && (
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--muted)] border border-[var(--border)] normal-case tracking-normal font-medium text-[var(--muted-foreground)]">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/20 normal-case tracking-normal font-medium text-red-600 dark:text-red-400">
                       No API Key
                     </span>
                   )}
@@ -132,20 +132,20 @@ export default function ModelSelector({
                         }
                       }}
                       disabled={isDisabled}
-                      className={`w-full flex items-center justify-between px-3 py-3 rounded-lg text-left transition-all mb-0.5 ${
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-all mb-0.5 ${
                         isDisabled
                           ? "opacity-40 cursor-not-allowed"
                           : isSelected
                             ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
-                            : "hover:bg-[var(--muted)] text-[var(--card-foreground)]"
+                            : "hover:bg-[var(--muted)] hover:translate-x-1 text-[var(--card-foreground)]"
                       }`}
                     >
                       <div className="flex flex-col gap-0.5">
-                        <span className="text-sm font-medium">
+                        <span className="text-sm font-semibold">
                           {model.name}
                         </span>
                         {model.description && (
-                          <span className="text-xs text-[var(--muted-foreground)] leading-snug">
+                          <span className="text-[11px] text-[var(--muted-foreground)] leading-tight">
                             {model.description}
                           </span>
                         )}

@@ -51,12 +51,12 @@ export default function ChatInput({
 
   return (
     <div
-      className="border-t border-[var(--border)] bg-[var(--background)] px-4 py-5 md:px-6"
+      className="border-t border-[var(--border)] bg-[var(--background)] px-3 py-4 md:px-6 md:py-5"
       style={{ boxShadow: "0 -1px 3px rgba(0,0,0,0.04)" }}
     >
       <form
         onSubmit={onSubmit}
-        className="max-w-[48rem] mx-auto flex items-end gap-3.5"
+        className="max-w-[48rem] mx-auto flex items-end gap-2 md:gap-3.5"
       >
         <div className="flex-1 relative">
           <textarea
@@ -67,7 +67,7 @@ export default function ChatInput({
             placeholder={placeholder}
             rows={1}
             disabled={isLoading}
-            className="w-full resize-none rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-5 py-3.5 pr-5 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full resize-none rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-4 py-3 md:px-6 md:py-4 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
               minHeight: "52px",
               maxHeight: "200px",
@@ -80,7 +80,7 @@ export default function ChatInput({
           <button
             type="button"
             onClick={onStop}
-            className="flex-shrink-0 p-3.5 rounded-2xl bg-[var(--destructive)] text-white hover:opacity-90 transition-opacity"
+            className="flex-shrink-0 p-3 md:p-3.5 rounded-2xl bg-[var(--destructive)] text-white hover:opacity-90 active:scale-95 transition-all"
             aria-label="Stop generating"
           >
             <Square size={20} />
@@ -89,7 +89,7 @@ export default function ChatInput({
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="flex-shrink-0 p-3.5 rounded-2xl bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex-shrink-0 p-3 md:p-3.5 rounded-2xl bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
             style={{
               boxShadow: input.trim()
                 ? "0 2px 8px rgba(79, 70, 229, 0.2)"
