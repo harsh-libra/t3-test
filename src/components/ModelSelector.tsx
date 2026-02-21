@@ -109,7 +109,7 @@ export default function ModelSelector({
                   {provider.name}
                   {!provider.available && (
                     <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded bg-muted border border-border normal-case tracking-normal font-medium text-muted-foreground">
-                      No Key
+                      No API Key
                     </span>
                   )}
                 </div>

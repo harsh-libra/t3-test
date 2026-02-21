@@ -64,7 +64,7 @@ function ToastItem({
 
   return (
     <div
-      className={`flex items-center gap-4 px-6 py-4 rounded-2xl border ${borderColors[toast.type]} bg-white/80 dark:bg-slate-900/80 backdrop-blur-md text-[var(--foreground)] animate-in slide-in-from-right-10 fade-in duration-500 shadow-2xl ${isExiting ? 'opacity-0 scale-95 transition-all duration-300' : ''}`}
+      className={`flex items-center gap-4 px-6 py-4 rounded-2xl border ${borderColors[toast.type]} bg-card/80 backdrop-blur-md text-foreground animate-in slide-in-from-right-10 fade-in duration-500 shadow-2xl ${isExiting ? 'opacity-0 scale-95 transition-all duration-300' : ''}`}
       style={{ boxShadow: "var(--shadow-xl)" }}
     >
       <div className="flex-shrink-0">

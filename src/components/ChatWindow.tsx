@@ -106,6 +106,12 @@ export default function ChatWindow({
         });
       }
     },
+    onError: (err) => {
+      addToast({
+        type: "error",
+        message: err.message || "Failed to get response from AI",
+      });
+    },
   });
 
   // Sync messages when conversation changes

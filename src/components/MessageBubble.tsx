@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { User, Bot, Copy, Check, RotateCcw } from "lucide-react";
 import CodeBlock from "./CodeBlock";
+import { useToast } from "./Toast";
 
 interface MessageBubbleProps {
   role: "user" | "assistant" | "system";
@@ -65,8 +66,8 @@ const MessageBubble = memo(function MessageBubble({
         <div
           className={`relative px-4 py-3 transition-all duration-200 ${
             isUser
-              ? "bg-primary text-white rounded-2xl rounded-tr-sm"
-              : "bg-card border border-border/60 text-card-foreground rounded-2xl rounded-tl-sm"
+              ? "bg-user-bubble text-user-bubble-text rounded-2xl rounded-tr-sm shadow-sm"
+              : "bg-assistant-bubble border border-border/60 text-assistant-bubble-text rounded-2xl rounded-tl-sm shadow-sm"
           }`}
         >
           {isUser ? (

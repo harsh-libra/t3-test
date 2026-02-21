@@ -21,7 +21,7 @@ const languageIcons: Record<string, React.ElementType> = {
   yml: Braces,
 };
 
-const CodeBlock: React.FC<CodeBlockProps> = ({ language = "text", children }) => {
+export default function CodeBlock({ language = "text", children }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -112,6 +112,4 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language = "text", children }) =>
       </div>
     </div>
   );
-};
-
-export default CodeBlock;
+}
