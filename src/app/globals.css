@@ -28,6 +28,14 @@
   --color-assistant-bubble-text: var(--assistant-bubble-text);
   --color-input-bg: var(--input-bg);
   --color-input-border: var(--input-border);
+  
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  
+  --transition-fast: var(--transition-fast);
+  --transition-normal: var(--transition-normal);
+  --transition-slow: var(--transition-slow);
 }
 
 /* ─── Type Scale ─── */
@@ -38,110 +46,115 @@
   --font-lg: 1rem;
   --font-xl: 1.25rem;
   --font-2xl: 1.5rem;
+  
+  /* Standard Transitions */
+  --transition-fast: 100ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ─── Light Theme ─── */
 :root {
   /* Backgrounds */
-  --background: #ffffff;
-  --foreground: #171717;
-  --muted: #f5f5f5;
-  --muted-foreground: #737373;
-  --border: #ebebeb;
+  --background: #fcfcfd;
+  --foreground: #101828;
+  --muted: #f2f4f7;
+  --muted-foreground: #667085;
+  --border: #e4e7ec;
   --card: #ffffff;
-  --card-foreground: #171717;
+  --card-foreground: #101828;
 
-  /* Primary — flat near-black */
-  --primary: #171717;
+  /* Primary — indigo-600 */
+  --primary: #4f46e5;
   --primary-foreground: #ffffff;
 
-  /* Accent — subtle flat gray */
-  --accent: #f5f5f5;
-  --accent-foreground: #171717;
+  /* Accent — indigo-50 */
+  --accent: #f5f3ff;
+  --accent-foreground: #4f46e5;
 
   /* Destructive */
   --destructive: #ef4444;
 
   /* Ring */
-  --ring: #171717;
+  --ring: #4f46e5;
 
-  /* Sidebar — barely off-white */
-  --sidebar-bg: #fafafa;
-  --sidebar-border: #ebebeb;
+  /* Sidebar — slate-50 */
+  --sidebar-bg: #f9fafb;
+  --sidebar-border: #eaecf0;
 
-  /* Chat bubbles — flat, no indigo */
-  --user-bubble: #f5f5f5;
-  --user-bubble-text: #171717;
-  --assistant-bubble: transparent;
-  --assistant-bubble-text: #171717;
+  /* Chat bubbles */
+  --user-bubble: #4f46e5;
+  --user-bubble-text: #ffffff;
+  --assistant-bubble: #ffffff;
+  --assistant-bubble-text: #101828;
 
   /* Input */
   --input-bg: #ffffff;
-  --input-border: #e0e0e0;
+  --input-border: #d0d5dd;
 
   /* Scrollbar */
-  --scrollbar-thumb: #d4d4d4;
+  --scrollbar-thumb: #d1d5db;
   --scrollbar-track: transparent;
 
-  /* Shadows — flat, minimal */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 1px 2px rgba(0, 0, 0, 0.04);
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+  --shadow-md: 0 4px 8px -2px rgba(16, 24, 40, 0.1), 0 2px 4px -2px rgba(16, 24, 40, 0.06);
+  --shadow-lg: 0 12px 16px -4px rgba(16, 24, 40, 0.08), 0 4px 6px -2px rgba(16, 24, 40, 0.03);
 
-  /* Gradient — flat color */
-  --gradient-primary: #171717;
+  /* Gradient */
+  --gradient-primary: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #c026d3 100%);
 }
 
 /* ─── Dark Theme ─── */
 .dark {
-  /* Backgrounds — true dark */
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --muted: #1a1a1a;
-  --muted-foreground: #a0a0a0;
-  --border: #2a2a2a;
-  --card: #111111;
-  --card-foreground: #ededed;
+  /* Backgrounds — deep slate */
+  --background: #0b0f1a;
+  --foreground: #f9fafb;
+  --muted: #1f2937;
+  --muted-foreground: #9ca3af;
+  --border: #2d3748;
+  --card: #111827;
+  --card-foreground: #f9fafb;
 
-  /* Primary — light text as primary */
-  --primary: #ededed;
-  --primary-foreground: #0a0a0a;
+  /* Primary — indigo-500 */
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
 
-  /* Accent — subtle dark */
-  --accent: #1a1a1a;
-  --accent-foreground: #ededed;
+  /* Accent — slate-800 */
+  --accent: #1f2937;
+  --accent-foreground: #f9fafb;
 
   /* Destructive */
-  --destructive: #dc2626;
+  --destructive: #ef4444;
 
   /* Ring */
-  --ring: #ededed;
+  --ring: #6366f1;
 
-  /* Sidebar — barely distinguished */
-  --sidebar-bg: #0f0f0f;
-  --sidebar-border: #2a2a2a;
+  /* Sidebar — midnight slate */
+  --sidebar-bg: #030712;
+  --sidebar-border: #1f2937;
 
-  /* Chat bubbles — flat */
-  --user-bubble: #1a1a1a;
-  --user-bubble-text: #ededed;
-  --assistant-bubble: transparent;
-  --assistant-bubble-text: #ededed;
+  /* Chat bubbles */
+  --user-bubble: #4f46e5;
+  --user-bubble-text: #ffffff;
+  --assistant-bubble: #1f2937;
+  --assistant-bubble-text: #f9fafb;
 
   /* Input */
-  --input-bg: #111111;
-  --input-border: #2a2a2a;
+  --input-bg: #111827;
+  --input-border: #374151;
 
   /* Scrollbar */
-  --scrollbar-thumb: #333333;
+  --scrollbar-thumb: #374151;
   --scrollbar-track: transparent;
 
-  /* Shadows — flat, none */
-  --shadow-sm: none;
-  --shadow-md: none;
-  --shadow-lg: none;
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -2px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
 
-  /* Gradient — flat color */
-  --gradient-primary: #ededed;
+  /* Gradient */
+  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
 }
 
 /* Removed custom * { padding: 0; margin: 0; } reset — Tailwind v4's Preflight 
@@ -167,7 +180,8 @@ body {
 
 /* ─── Custom Scrollbar ─── */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -176,11 +190,34 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: var(--scrollbar-thumb);
-  border-radius: 3px;
+  border-radius: 10px;
+  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
+}
+
+/* ─── UI Utilities ─── */
+.hover-glow {
+  transition: all var(--transition-normal);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px -5px var(--primary);
+  transform: translateY(-1px);
+}
+
+/* Assistant bubble glassy effect in dark mode */
+.assistant-bubble {
+  background-color: var(--assistant-bubble);
+}
+
+.dark .assistant-bubble {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
 /* ─── Markdown / Prose Styling ─── */
@@ -286,16 +323,33 @@ body {
   line-height: 1.4;
 }
 
+.prose strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
 .prose a {
   color: var(--primary);
   text-decoration: underline;
   text-underline-offset: 2px;
+  transition: all 0.2s ease;
+}
+
+.prose a:hover {
+  opacity: 0.8;
+  text-decoration-thickness: 2px;
 }
 
 .prose blockquote {
-  border-left: 4px solid var(--border);
-  padding: 0.75rem 1.25rem;
-  background: transparent;
+  border-left: 3px solid var(--primary);
+  padding: 0.5rem 1rem;
+  background: var(--muted);
   color: var(--foreground);
   margin: 1.5rem 0;
   font-style: italic;
@@ -435,6 +489,11 @@ body {
   }
 }
 
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; transform: scale(0.98); }
+}
+
 /* ─── Animation Utility Classes ─── */
 
 .animate-fade-in {
@@ -463,6 +522,10 @@ body {
 
 .animate-message-pop {
   animation: messagePop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s infinite ease-in-out;
 }
 
 .animate-typing-dot {

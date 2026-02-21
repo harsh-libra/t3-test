@@ -144,6 +144,7 @@ export default function Home() {
         onSelectConversation={handleSelectConversation}
         onNewChat={handleNewChat}
         onDeleteConversation={handleDeleteConversation}
+        onUpdateConversation={handleUpdateConversation}
         isOpen={sidebarOpen}
         onToggle={handleToggleSidebar}
       />
