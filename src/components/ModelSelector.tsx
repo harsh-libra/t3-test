@@ -11,16 +11,16 @@ interface ModelSelectorProps {
 }
 
 // Provider icons
-function ProviderIcon({ providerId }: { providerId: string }) {
+export function ProviderIcon({ providerId, size = 16 }: { providerId: string; size?: number }) {
   switch (providerId) {
     case "openai":
-      return <Sparkles size={16} className="text-green-500" />;
+      return <Sparkles size={size} className="text-green-500" />;
     case "anthropic":
-      return <Cpu size={16} className="text-orange-500" />;
+      return <Cpu size={size} className="text-orange-500" />;
     case "google":
-      return <Zap size={16} className="text-blue-500" />;
+      return <Zap size={size} className="text-blue-500" />;
     default:
-      return <Cpu size={16} />;
+      return <Cpu size={size} />;
   }
 }
 
@@ -73,95 +73,94 @@ export default function ModelSelector({
   );
 
   const displayName = currentModel
-    ? `${currentModel.name}`
+    ? currentModel.name
     : loading
-      ? "Loading models..."
-      : "Select a model";
+      ? "Loading..."
+      : "Select model";
 
   return (
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--card-foreground)] hover:bg-[var(--muted)] transition-all text-sm font-medium"
-        style={{ boxShadow: "var(--shadow-sm)" }}
+        className={`flex items-center gap-2 px-3 py-2 rounded-lg border border-border/60 bg-card text-foreground hover:bg-muted/50 hover:border-border transition-all duration-200 active:scale-[0.97] text-sm font-medium group ${isOpen ? 'ring-2 ring-primary/15 border-primary/30' : ''}`}
         disabled={loading}
       >
         {currentProvider && (
-          <ProviderIcon providerId={currentProvider.id} />
+          <ProviderIcon providerId={currentProvider.id} size={14} />
         )}
-        <span className="truncate max-w-[200px]">{displayName}</span>
+        <span className="truncate max-w-[160px]">{displayName}</span>
         <ChevronDown
-          size={16}
-          className={`transition-transform text-[var(--muted-foreground)] ${isOpen ? "rotate-180" : ""}`}
+          size={14}
+          className={`transition-transform duration-200 text-muted-foreground ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
 
       {isOpen && (
         <div
-          className="absolute top-full left-0 mt-2 w-80 rounded-xl border border-[var(--border)] bg-[var(--card)] z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
+          className="absolute top-full left-0 mt-1.5 w-72 rounded-xl border border-border bg-card z-50 overflow-hidden animate-scale-in"
           style={{ boxShadow: "var(--shadow-lg)" }}
         >
-          <div className="p-2.5">
+          <div className="p-1.5 flex flex-col gap-1">
             {providers.map((provider, providerIndex) => (
-              <div key={provider.id}>
+              <div key={provider.id} className="flex flex-col">
                 {/* Provider header */}
-                <div className="flex items-center gap-2 px-3 py-2.5 text-xs font-semibold text-[var(--muted-foreground)] uppercase tracking-wider">
-                  <ProviderIcon providerId={provider.id} />
+                <div className="flex items-center gap-2 px-3 pt-2 pb-1 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                  <ProviderIcon providerId={provider.id} size={11} />
                   {provider.name}
                   {!provider.available && (
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--muted)] border border-[var(--border)] normal-case tracking-normal font-medium text-[var(--muted-foreground)]">
+                    <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded bg-muted border border-border normal-case tracking-normal font-medium text-muted-foreground">
                       No API Key
                     </span>
                   )}
                 </div>
 
                 {/* Models */}
-                {provider.models.map((model) => {
-                  const isSelected =
-                    selectedProvider === provider.id &&
-                    selectedModel === model.id;
-                  const isDisabled = !provider.available;
+                <div className="flex flex-col gap-0.5 px-0.5">
+                  {provider.models.map((model) => {
+                    const isSelected =
+                      selectedProvider === provider.id &&
+                      selectedModel === model.id;
+                    const isDisabled = !provider.available;
 
-                  return (
-                    <button
-                      key={model.id}
-                      onClick={() => {
-                        if (!isDisabled) {
+                    return (
+                      <button
+                        key={model.id}
+                        disabled={isDisabled}
+                        onClick={() => {
                           onSelect(provider.id, model.id);
                           setIsOpen(false);
-                        }
-                      }}
-                      disabled={isDisabled}
-                      className={`w-full flex items-center justify-between px-3 py-3 rounded-lg text-left transition-all mb-0.5 ${
-                        isDisabled
-                          ? "opacity-40 cursor-not-allowed"
-                          : isSelected
-                            ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
-                            : "hover:bg-[var(--muted)] text-[var(--card-foreground)]"
-                      }`}
-                    >
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-sm font-medium">
-                          {model.name}
-                        </span>
-                        {model.description && (
-                          <span className="text-xs text-[var(--muted-foreground)] leading-snug">
-                            {model.description}
-                          </span>
-                        )}
-                      </div>
-                      {isSelected && (
-                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[var(--primary)] flex items-center justify-center">
-                          <Check size={12} className="text-white" />
+                        }}
+                        className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-all duration-150 ${
+                          isDisabled
+                            ? "opacity-35 cursor-not-allowed"
+                            : isSelected
+                              ? "bg-primary/8 text-foreground"
+                              : "hover:bg-muted text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        <div className="flex flex-col gap-0.5">
+                          <div className="flex items-center gap-2">
+                            <span className={`text-[13px] font-medium ${isSelected ? "text-primary" : ""}`}>
+                              {model.name}
+                            </span>
+                          </div>
+                          {model.description && (
+                            <span className="text-[10px] text-muted-foreground/70 leading-snug line-clamp-1">
+                              {model.description}
+                            </span>
+                          )}
                         </div>
-                      )}
-                    </button>
-                  );
-                })}
+                        {isSelected && (
+                          <Check size={14} className="text-primary flex-shrink-0" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
 
-                {/* Divider between providers — not after the last one */}
+                {/* Divider between providers */}
                 {providerIndex < providers.length - 1 && (
-                  <div className="mx-3 my-1.5 border-t border-[var(--border)]/60" />
+                  <div className="mx-3 my-1 border-t border-border/50" />
                 )}
               </div>
             ))}
