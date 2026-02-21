@@ -30,17 +30,24 @@ function ToastItem({
   toast: Toast;
   onRemove: (id: string) => void;
 }) {
+  const [isExiting, setIsExiting] = useState(false);
+
+  const handleRemove = useCallback(() => {
+    setIsExiting(true);
+    setTimeout(() => onRemove(toast.id), 200);
+  }, [toast.id, onRemove]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      onRemove(toast.id);
+      handleRemove();
     }, toast.duration || 5000);
     return () => clearTimeout(timer);
-  }, [toast.id, toast.duration, onRemove]);
+  }, [toast.id, toast.duration, handleRemove]);
 
   const icons = {
-    error: <AlertCircle size={20} className="text-red-500 flex-shrink-0" />,
-    success: <CheckCircle size={20} className="text-green-500 flex-shrink-0" />,
-    info: <Info size={20} className="text-blue-500 flex-shrink-0" />,
+    error: <AlertCircle size={20} className="text-red-500 flex-shrink-0 animate-scale-in" />,
+    success: <CheckCircle size={20} className="text-green-500 flex-shrink-0 animate-scale-in" />,
+    info: <Info size={20} className="text-blue-500 flex-shrink-0 animate-scale-in" />,
   };
 
   const borderColors = {
@@ -57,16 +64,18 @@ function ToastItem({
 
   return (
     <div
-      className={`flex items-center gap-3 px-5 py-4 rounded-xl border ${borderColors[toast.type]} border-l-[3px] ${accentBg[toast.type]} bg-[var(--card)] text-[var(--card-foreground)] animate-in slide-in-from-right fade-in duration-300`}
-      style={{ boxShadow: "var(--shadow-lg)" }}
+      className={`flex items-center gap-4 px-6 py-4 rounded-2xl border ${borderColors[toast.type]} bg-white/80 dark:bg-slate-900/80 backdrop-blur-md text-[var(--foreground)] animate-in slide-in-from-right-10 fade-in duration-500 shadow-2xl ${isExiting ? 'opacity-0 scale-95 transition-all duration-300' : ''}`}
+      style={{ boxShadow: "var(--shadow-xl)" }}
     >
-      {icons[toast.type]}
-      <p className="text-sm flex-1 leading-relaxed">{toast.message}</p>
+      <div className="flex-shrink-0">
+        {icons[toast.type]}
+      </div>
+      <p className="text-[0.9375rem] font-medium flex-1 leading-snug">{toast.message}</p>
       <button
-        onClick={() => onRemove(toast.id)}
-        className="p-1.5 rounded-lg hover:bg-[var(--muted)] transition-colors text-[var(--muted-foreground)] flex-shrink-0"
+        onClick={handleRemove}
+        className="p-1.5 rounded-lg hover:bg-[var(--muted)] hover:scale-110 active:scale-90 transition-all duration-150 text-[var(--muted-foreground)] flex-shrink-0"
       >
-        <X size={14} />
+        <X size={16} />
       </button>
     </div>
   );
