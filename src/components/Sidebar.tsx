@@ -16,6 +16,7 @@ import {
   Check,
 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+import { useToast } from "./Toast";
 import type { Conversation } from "@/types";
 import { groupConversations } from "@/lib/conversations";
 
@@ -73,6 +74,7 @@ export default function Sidebar({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState("");
   const editInputRef = useRef<HTMLInputElement>(null);
+  const { addToast } = useToast();
 
   const filteredConversations = useMemo(() => {
     if (!searchQuery.trim()) return conversations;
@@ -107,6 +109,11 @@ export default function Sidebar({
           ...conv,
           title: editingTitle.trim(),
           updatedAt: Date.now(),
+        });
+        addToast({
+          type: "success",
+          message: "Conversation renamed",
+          duration: 2000,
         });
       }
     }
@@ -324,6 +331,11 @@ export default function Sidebar({
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     onDeleteConversation(conv.id);
+                                    addToast({
+                                      type: "info",
+                                      message: "Conversation deleted",
+                                      duration: 3000,
+                                    });
                                   }}
                                   className="p-1.5 rounded-md text-muted-foreground/50 hover:text-destructive hover:bg-muted transition-all"
                                   aria-label="Delete conversation"

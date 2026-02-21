@@ -62,7 +62,7 @@ export default function ChatInput({
         onSubmit={onSubmit}
         className="max-w-3xl mx-auto relative"
       >
-        <div className="relative group/input rounded-2xl border border-border/80 bg-card shadow-lg focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10 focus-within:shadow-xl transition-all duration-200">
+        <div className="relative group/input rounded-2xl border border-input-border bg-input-bg shadow-lg focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10 focus-within:shadow-xl transition-all duration-200">
           <textarea
             ref={textareaRef}
             value={input}
