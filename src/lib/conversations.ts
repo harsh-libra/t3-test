@@ -10,8 +10,13 @@ export function listConversations(): Conversation[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
-    const conversations: Conversation[] = JSON.parse(raw);
-    return conversations.sort((a, b) => b.updatedAt - a.updatedAt);
+    const conversations = JSON.parse(raw);
+    if (!Array.isArray(conversations)) return [];
+    
+    // Ensure we return a valid sorted array of conversations
+    return (conversations as Conversation[])
+      .filter(c => c && typeof c.id === "string")
+      .sort((a, b) => b.updatedAt - a.updatedAt);
   } catch {
     return [];
   }
