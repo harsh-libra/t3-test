@@ -84,13 +84,15 @@ export default function ChatWindow({
     onFinish: (message) => {
       // Save the conversation when the assistant finishes
       if (conversation && onUpdateConversation) {
-        const updatedMessages = [
-          ...messages,
-          { id: message.id, role: message.role, content: message.content },
-        ];
+        // Ensure we don't duplicate the last message if it's already in the messages array
+        const messageExists = messages.some((m) => m.id === message.id);
+        const finalMessages = messageExists
+          ? messages.map((m) => (m.id === message.id ? message : m))
+          : [...messages, message];
+
         onUpdateConversation({
           ...conversation,
-          messages: updatedMessages.map((m) => ({
+          messages: finalMessages.map((m) => ({
             id: m.id,
             role: m.role as "user" | "assistant",
             content: m.content,
@@ -99,10 +101,24 @@ export default function ChatWindow({
           model: selectedModel,
           updatedAt: Date.now(),
           title:
-            conversation.title === "New Chat" && updatedMessages.length > 0
-              ? updatedMessages[0].content.slice(0, 50) +
-                (updatedMessages[0].content.length > 50 ? "..." : "")
+            conversation.title === "New Chat" && finalMessages.length > 0
+              ? finalMessages[0].content.slice(0, 50) +
+                (finalMessages[0].content.length > 50 ? "..." : "")
               : conversation.title,
+        });
+      }
+    },
+    onResponse: () => {
+      // Save conversation when the response starts (to persist the user message)
+      if (conversation && onUpdateConversation) {
+        onUpdateConversation({
+          ...conversation,
+          messages: messages.map((m) => ({
+            id: m.id,
+            role: m.role as "user" | "assistant",
+            content: m.content,
+          })),
+          updatedAt: Date.now(),
         });
       }
     },
