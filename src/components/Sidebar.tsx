@@ -33,11 +33,11 @@ interface SidebarProps {
 function ProviderBadge({ providerId }: { providerId: string }) {
   switch (providerId) {
     case "openai":
-      return <Sparkles size={13} className="text-green-500 flex-shrink-0" />;
+      return <Sparkles size={12} className="text-green-500 flex-shrink-0" />;
     case "anthropic":
-      return <Cpu size={13} className="text-orange-500 flex-shrink-0" />;
+      return <Cpu size={12} className="text-orange-500 flex-shrink-0" />;
     case "google":
-      return <Zap size={13} className="text-blue-500 flex-shrink-0" />;
+      return <Zap size={12} className="text-blue-500 flex-shrink-0" />;
     default:
       return null;
   }
@@ -126,7 +126,7 @@ export default function Sidebar({
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-md animate-fade-in"
+          className="fixed inset-0 bg-black/30 z-40 md:hidden backdrop-blur-sm animate-fade-in"
           onClick={onToggle}
         />
       )}
@@ -134,121 +134,117 @@ export default function Sidebar({
       {/* Mobile hamburger button */}
       <button
         onClick={onToggle}
-        className="fixed top-3 left-3 z-50 p-2.5 rounded-xl bg-card/90 backdrop-blur-lg border border-border text-foreground md:hidden shadow-lg active:scale-95 transition-all"
+        className="fixed top-3 left-3 z-50 p-2.5 rounded-xl bg-card/90 backdrop-blur-lg border border-border/60 text-foreground md:hidden shadow-md active:scale-95 transition-all"
         aria-label="Toggle sidebar"
       >
-        {isOpen ? <X size={20} /> : <Menu size={20} />}
+        {isOpen ? <X size={18} /> : <Menu size={18} />}
       </button>
 
       {/* Sidebar */}
       <aside
-        className={`fixed md:relative z-40 h-full flex flex-col bg-sidebar-bg/95 md:bg-sidebar-bg backdrop-blur-xl border-r border-sidebar-border transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] transition-theme ${
+        className={`fixed md:relative z-40 h-full flex flex-col bg-sidebar-bg border-r border-sidebar-border transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
           isOpen
-            ? "w-80 translate-x-0"
-            : "w-80 -translate-x-full md:w-0 md:translate-x-0 md:overflow-hidden"
+            ? "w-72 translate-x-0"
+            : "w-72 -translate-x-full md:w-0 md:translate-x-0 md:overflow-hidden"
         }`}
       >
-        <div className="flex flex-col h-full w-80">
+        <div className="flex flex-col h-full w-72">
           {/* Header */}
-          <div
-            className="flex items-center justify-between px-6 py-5 border-b border-[var(--sidebar-border)]"
-          >
-            <h1 className="text-xl font-extrabold text-[var(--foreground)] flex items-center gap-3 tracking-tighter">
+          <div className="flex items-center justify-between px-4 h-[60px] border-b border-sidebar-border">
+            <h1 className="text-lg font-bold text-foreground flex items-center gap-2.5 tracking-tight">
               <div
-                className="w-9 h-9 rounded-xl flex items-center justify-center shadow-indigo-500/20 shadow-lg"
+                className="w-8 h-8 rounded-lg flex items-center justify-center"
                 style={{ background: "var(--gradient-primary)" }}
               >
-                <MessageSquare size={18} className="text-white" strokeWidth={2.5} />
+                <MessageSquare size={16} className="text-white" strokeWidth={2.5} />
               </div>
               <span>T3 Chat</span>
             </h1>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1">
               <ThemeToggle />
               <button
                 onClick={onToggle}
-                className="p-2 rounded-xl hover:bg-[var(--muted)] text-[var(--muted-foreground)] transition-colors md:hidden"
+                className="p-2 rounded-lg hover:bg-muted text-muted-foreground transition-colors md:hidden"
                 aria-label="Close sidebar"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
           </div>
 
           {/* New Chat button */}
-          <div className="px-4 py-3">
+          <div className="px-3 pt-3 pb-2">
             <button
               onClick={() => {
                 onNewChat();
                 if (window.innerWidth < 768) onToggle();
               }}
-              className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl text-white hover:brightness-110 active:scale-[0.98] transition-all duration-300 font-bold text-sm relative overflow-hidden group border border-white/20 shadow-[0_8px_20px_-4px_rgba(79,70,229,0.4)] dark:shadow-[0_8px_20px_-4px_rgba(0,0,0,0.5)]"
+              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-white hover:brightness-110 active:scale-[0.98] transition-all duration-200 font-semibold text-sm relative overflow-hidden group"
               style={{ background: "var(--gradient-primary)" }}
             >
-              <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors pointer-events-none" />
-              <div className="absolute -inset-1 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
-              <span className="flex items-center gap-2.5 relative z-10">
-                <MessageSquarePlus size={19} strokeWidth={2.5} className="group-hover:rotate-6 transition-transform duration-500" />
+              <span className="flex items-center gap-2 relative z-10">
+                <MessageSquarePlus size={16} strokeWidth={2.5} />
                 New Chat
               </span>
-              <kbd className="hidden sm:inline-flex items-center text-[10px] font-bold opacity-90 bg-white/20 dark:bg-black/20 px-2 py-0.5 rounded-md font-mono border border-white/20 relative z-10 shadow-sm backdrop-blur-sm">
+              <kbd className="hidden sm:inline-flex items-center text-[10px] font-medium opacity-80 bg-white/20 px-1.5 py-0.5 rounded font-mono border border-white/10 relative z-10">
                 ⌘K
               </kbd>
             </button>
           </div>
 
           {/* Search */}
-          <div className="px-4 pb-3">
-            <div className="relative group px-1">
+          <div className="px-3 pb-2">
+            <div className="relative group">
               <Search
                 size={14}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] group-focus-within:text-[var(--primary)] transition-all duration-200"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors duration-200"
               />
               <input
                 type="text"
-                placeholder="Search conversations..."
+                placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[var(--muted)]/50 border border-[var(--sidebar-border)] focus:border-[var(--primary)]/50 focus:ring-4 focus:ring-[var(--primary)]/5 focus:bg-[var(--card)] rounded-xl py-2.5 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-[var(--muted-foreground)]/60 font-medium shadow-sm"
+                className="w-full bg-muted/50 border border-sidebar-border focus:border-primary/40 focus:ring-2 focus:ring-primary/10 focus:bg-card rounded-lg py-2 pl-9 pr-8 text-sm outline-none transition-all placeholder:text-muted-foreground/50 font-medium"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] p-1 rounded-full hover:bg-[var(--muted)] transition-colors"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-0.5 rounded hover:bg-muted transition-colors"
                 >
-                  <X size={14} />
+                  <X size={12} />
                 </button>
               )}
             </div>
           </div>
 
           {/* Conversation list */}
-          <div className="flex-1 overflow-y-auto px-3 pb-3">
+          <div className="flex-1 overflow-y-auto px-2 pb-2">
             {conversations.length === 0 ? (
-              <div className="text-center py-10 text-[var(--muted-foreground)] text-sm animate-fade-in">
+              <div className="text-center py-12 text-muted-foreground text-sm animate-fade-in">
                 <MessageSquare
-                  size={36}
-                  className="mx-auto mb-3 opacity-40"
+                  size={32}
+                  className="mx-auto mb-3 opacity-30"
                 />
-                <p className="font-medium">No conversations yet</p>
-                <p className="text-xs mt-1.5 opacity-75">Start a new chat to begin</p>
+                <p className="font-medium text-sm">No conversations yet</p>
+                <p className="text-xs mt-1 opacity-60">Start a new chat to begin</p>
               </div>
             ) : filteredConversations.length === 0 ? (
-              <div className="text-center py-10 text-[var(--muted-foreground)] text-sm animate-fade-in">
-                <Search size={36} className="mx-auto mb-3 opacity-20" />
-                <p className="font-medium">No results found</p>
-                <p className="text-xs mt-1.5 opacity-75">Try a different search term</p>
+              <div className="text-center py-12 text-muted-foreground text-sm animate-fade-in">
+                <Search size={32} className="mx-auto mb-3 opacity-20" />
+                <p className="font-medium text-sm">No results found</p>
+                <p className="text-xs mt-1 opacity-60">Try a different search term</p>
               </div>
             ) : (
-              <div className="space-y-5">
+              <div className="space-y-4">
                 {groupedConversations.map(([groupName, items]) => (
-                  <div key={groupName} className="space-y-1 animate-fade-in mb-4 last:mb-0">
-                    <div className="flex items-center gap-2 px-3 mb-2">
-                      <h2 className="text-[11px] font-extrabold text-[var(--muted-foreground)] uppercase tracking-[0.15em]">
+                  <div key={groupName} className="animate-fade-in">
+                    <div className="flex items-center gap-2 px-2.5 mb-1.5">
+                      <h2 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                         {groupName}
                       </h2>
-                      <div className="h-[1px] flex-1 bg-[var(--sidebar-border)]/50" />
+                      <div className="h-px flex-1 bg-sidebar-border/60" />
                     </div>
-                    <div className="space-y-1.5">
+                    <div className="space-y-0.5">
                       {items.map((conv, index) => {
                         const isActive = conv.id === currentConversationId;
                         const isHovered = conv.id === hoveredId;
@@ -257,14 +253,11 @@ export default function Sidebar({
                         return (
                           <div
                             key={conv.id}
-                            className={`group relative flex items-center rounded-xl cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] animate-fade-in-up border ${
+                            className={`group relative flex items-center rounded-lg cursor-pointer transition-all duration-200 ${
                               isActive
-                                ? "bg-white dark:bg-slate-900 shadow-md border-[var(--sidebar-border)] scale-[1.02] z-10"
-                                : "hover:bg-[var(--muted)]/60 border-transparent hover:border-[var(--sidebar-border)]/50"
+                                ? "bg-primary/8 dark:bg-primary/10 border-l-2 border-primary"
+                                : "hover:bg-muted/60 border-l-2 border-transparent"
                             }`}
-                            style={{ 
-                              animationDelay: `${Math.min(index * 40, 300)}ms`,
-                            }}
                             onMouseEnter={() => setHoveredId(conv.id)}
                             onMouseLeave={() => setHoveredId(null)}
                             onClick={() => {
@@ -275,12 +268,7 @@ export default function Sidebar({
                             }}
                             onDoubleClick={(e) => handleStartEdit(e, conv)}
                           >
-                            {/* Active indicator */}
-                            {isActive && (
-                              <div className="absolute left-0 top-2 bottom-2 w-1 bg-[var(--primary)] rounded-r-full shadow-[2px_0_8px_var(--primary)] z-10" />
-                            )}
-
-                            <div className="flex-1 min-w-0 px-4 py-3">
+                            <div className="flex-1 min-w-0 px-3 py-2.5">
                               {isEditing ? (
                                 <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                                   <input
@@ -290,32 +278,32 @@ export default function Sidebar({
                                     onChange={(e) => setEditingTitle(e.target.value)}
                                     onBlur={() => handleSaveEdit()}
                                     onKeyDown={handleKeyDown}
-                                    className="w-full bg-[var(--card)] border border-[var(--primary)] rounded-md px-2 py-1 text-sm outline-none shadow-[0_0_0_2px_rgba(79,70,229,0.1)]"
+                                    className="w-full bg-card border border-primary/50 rounded-md px-2 py-1 text-sm outline-none ring-2 ring-primary/10"
                                   />
                                   <button
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       handleSaveEdit();
                                     }}
-                                    className="p-1 rounded-md text-green-500 hover:bg-green-50 dark:hover:bg-green-500/10"
+                                    className="p-1 rounded text-green-500 hover:bg-green-50 dark:hover:bg-green-500/10"
                                   >
                                     <Check size={14} />
                                   </button>
                                 </div>
                               ) : (
                                 <>
-                                  <div className="flex items-center gap-2.5">
+                                  <div className="flex items-center gap-2">
                                     <ProviderBadge providerId={conv.provider} />
-                                    <p className={`text-[14px] leading-tight font-semibold truncate ${isActive ? "text-[var(--foreground)]" : "text-[var(--foreground)]/85"}`}>
+                                    <p className={`text-[13px] leading-tight font-medium truncate ${isActive ? "text-foreground" : "text-foreground/80"}`}>
                                       {conv.title}
                                     </p>
                                   </div>
-                                  <div className="flex items-center gap-2.5 mt-1.5 text-[11px] font-medium text-[var(--muted-foreground)]/80 tracking-tight">
-                                    <span className="flex items-center gap-1 shrink-0">
-                                      <MessageSquare size={11} className="opacity-70" strokeWidth={2.5} />
+                                  <div className="flex items-center gap-2 mt-1 text-[10px] text-muted-foreground/70">
+                                    <span className="flex items-center gap-1">
+                                      <MessageSquare size={10} className="opacity-60" strokeWidth={2.5} />
                                       {conv.messages.length}
                                     </span>
-                                    <span className="w-1 h-1 rounded-full bg-[var(--muted-foreground)]/30 shrink-0" />
+                                    <span className="w-0.5 h-0.5 rounded-full bg-muted-foreground/30" />
                                     <span className="truncate">{formatTimeAgo(conv.updatedAt)}</span>
                                   </div>
                                 </>
@@ -324,23 +312,23 @@ export default function Sidebar({
 
                             {/* Actions */}
                             {!isEditing && (isHovered || isActive) && (
-                              <div className="flex items-center pr-2.5 animate-fade-in">
+                              <div className="flex items-center pr-2 gap-0.5 animate-fade-in">
                                 <button
                                   onClick={(e) => handleStartEdit(e, conv)}
-                                  className="p-1.5 rounded-lg text-[var(--muted-foreground)]/60 hover:text-[var(--primary)] hover:bg-[var(--muted)] transition-all duration-150"
+                                  className="p-1.5 rounded-md text-muted-foreground/50 hover:text-primary hover:bg-muted transition-all"
                                   aria-label="Edit title"
                                 >
-                                  <Edit2 size={13} />
+                                  <Edit2 size={12} />
                                 </button>
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     onDeleteConversation(conv.id);
                                   }}
-                                  className="p-1.5 rounded-lg text-[var(--muted-foreground)]/60 hover:text-[var(--destructive)] hover:bg-[var(--muted)] transition-all duration-150"
+                                  className="p-1.5 rounded-md text-muted-foreground/50 hover:text-destructive hover:bg-muted transition-all"
                                   aria-label="Delete conversation"
                                 >
-                                  <Trash2 size={13} />
+                                  <Trash2 size={12} />
                                 </button>
                               </div>
                             )}
@@ -355,48 +343,29 @@ export default function Sidebar({
           </div>
 
           {/* Footer with shortcuts */}
-          <div className="px-4 py-4 border-t border-[var(--sidebar-border)] bg-[var(--sidebar-bg)]/50 backdrop-blur-md">
+          <div className="px-3 py-3 border-t border-sidebar-border">
             <button
               onClick={() => setShowShortcuts(!showShortcuts)}
-              className="w-full flex items-center justify-center gap-2 text-xs font-semibold text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] rounded-xl active:scale-[0.98] transition-all duration-200 py-2.5 border border-transparent hover:border-[var(--sidebar-border)]"
+              className="w-full flex items-center justify-center gap-2 text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg active:scale-[0.98] transition-all py-2"
             >
-              <Keyboard size={15} strokeWidth={2} />
-              Keyboard shortcuts
+              <Keyboard size={13} />
+              Shortcuts
             </button>
             {showShortcuts && (
-              <div className="mt-3 p-4 rounded-xl bg-[var(--muted)]/50 border border-[var(--sidebar-border)] text-xs space-y-3 animate-fade-in-down shadow-inner">
-                <div className="flex justify-between items-center">
-                  <span className="tracking-wide">New chat</span>
-                  <kbd
-                    className="px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)] font-mono text-[var(--foreground)] font-bold shadow-sm"
-                  >
-                    ⌘K
-                  </kbd>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="tracking-wide">Toggle sidebar</span>
-                  <kbd
-                    className="px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)] font-mono text-[var(--foreground)] font-bold shadow-sm"
-                  >
-                    ⌘B
-                  </kbd>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="tracking-wide">Send message</span>
-                  <kbd
-                    className="px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)] font-mono text-[var(--foreground)] font-bold shadow-sm"
-                  >
-                    Enter
-                  </kbd>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="tracking-wide">New line</span>
-                  <kbd
-                    className="px-2 py-0.5 rounded-md bg-[var(--card)] border border-[var(--border)] font-mono text-[var(--foreground)] font-bold shadow-sm"
-                  >
-                    ⇧Enter
-                  </kbd>
-                </div>
+              <div className="mt-2 p-3 rounded-lg bg-muted/50 border border-sidebar-border text-[11px] space-y-2.5 animate-fade-in-down">
+                {[
+                  { label: "New chat", key: "⌘K" },
+                  { label: "Toggle sidebar", key: "⌘B" },
+                  { label: "Send message", key: "Enter" },
+                  { label: "New line", key: "⇧Enter" },
+                ].map((shortcut) => (
+                  <div key={shortcut.key} className="flex justify-between items-center">
+                    <span className="text-muted-foreground">{shortcut.label}</span>
+                    <kbd className="px-1.5 py-0.5 rounded bg-card border border-border font-mono text-foreground text-[10px] font-medium">
+                      {shortcut.key}
+                    </kbd>
+                  </div>
+                ))}
               </div>
             )}
           </div>

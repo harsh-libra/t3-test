@@ -26,7 +26,6 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language = "text", children }) =>
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Avoid hydration mismatch by only rendering theme-specific content after mount
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -41,46 +40,42 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language = "text", children }) =>
   const lineCount = children.split("\n").length;
   const showLineNumbers = lineCount > 5;
   
-  // Use oneDark by default during SSR to prevent flash
   const currentTheme = mounted && resolvedTheme === "light" ? prism : oneDark;
 
   return (
-    <div
-      className="relative group my-8 rounded-2xl overflow-hidden border border-[var(--border)] bg-[var(--card)] transition-all duration-300 shadow-md hover:shadow-2xl hover:border-[var(--primary)]/40"
-    >
-      <div className="flex items-center justify-between px-5 py-3 text-xs font-bold bg-slate-50/90 dark:bg-slate-900/90 text-[var(--muted-foreground)] border-b border-[var(--border)] backdrop-blur-sm transition-colors duration-200 uppercase tracking-widest">
-        <div className="flex items-center gap-2.5">
-          <div className="p-1 rounded bg-[var(--primary)]/10 text-[var(--primary)]">
-            <Icon size={14} />
-          </div>
-          <span className="capitalize tracking-wide">{language}</span>
+    <div className="relative group my-5 rounded-xl overflow-hidden border border-border/80 bg-card transition-all duration-200 hover:border-border">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-2.5 text-[11px] font-medium bg-muted/50 text-muted-foreground border-b border-border/60">
+        <div className="flex items-center gap-2">
+          <Icon size={12} className="opacity-60" />
+          <span className="capitalize">{language}</span>
         </div>
         <button
           onClick={handleCopy}
-          className={`flex items-center gap-1.5 transition-all duration-200 px-2.5 py-1 rounded-md opacity-0 group-hover:opacity-100 ${
+          className={`flex items-center gap-1.5 transition-all duration-200 px-2 py-1 rounded-md text-[10px] ${
             copied 
-              ? "bg-green-500/10 text-green-600 dark:text-green-400" 
-              : "hover:bg-[var(--muted)] hover:text-[var(--foreground)]"
+              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" 
+              : "opacity-0 group-hover:opacity-100 hover:bg-muted hover:text-foreground"
           }`}
           aria-label="Copy code"
         >
-          <span key={copied ? 'check' : 'copy'} className="flex items-center gap-1.5">
-            {copied ? (
-              <>
-                <Check size={14} className="animate-scale-in" />
-                <span className="animate-fade-in">Copied!</span>
-              </>
-            ) : (
-              <>
-                <Copy size={14} />
-                <span>Copy</span>
-              </>
-            )}
-          </span>
+          {copied ? (
+            <span className="flex items-center gap-1">
+              <Check size={12} className="animate-scale-in" />
+              Copied!
+            </span>
+          ) : (
+            <span className="flex items-center gap-1">
+              <Copy size={12} />
+              Copy
+            </span>
+          )}
         </button>
       </div>
+      
+      {/* Code */}
       <div className={`relative font-mono transition-colors duration-200 ${
-        mounted && resolvedTheme === "light" ? "bg-slate-50/50" : "bg-[#282c34]"
+        mounted && resolvedTheme === "light" ? "bg-slate-50/80" : "bg-[#1e1e28]"
       }`}>
         <SyntaxHighlighter
           style={currentTheme}
@@ -89,19 +84,20 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language = "text", children }) =>
           showLineNumbers={showLineNumbers}
           className="code-block-scrollbar"
           lineNumberStyle={{
-            minWidth: "3em",
+            minWidth: "2.5em",
             paddingRight: "1em",
             textAlign: "right",
             color: "var(--muted-foreground)",
-            opacity: 0.5,
+            opacity: 0.4,
             userSelect: "none",
+            fontSize: "0.8rem",
           }}
           customStyle={{
             margin: 0,
             borderRadius: 0,
-            padding: "1.25rem 1rem",
-            fontSize: "0.875rem",
-            lineHeight: "1.5",
+            padding: "1rem",
+            fontSize: "0.8125rem",
+            lineHeight: "1.6",
             background: "transparent",
             fontFamily: "var(--font-mono)",
           }}

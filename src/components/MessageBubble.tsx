@@ -36,39 +36,41 @@ const MessageBubble = memo(function MessageBubble({
 
   return (
     <div
-      className={`group flex gap-3 md:gap-4 py-6 px-4 md:px-0 animate-message-pop ${
+      className={`group flex gap-3 py-4 px-4 md:px-0 animate-message-pop ${
         isUser ? "flex-row-reverse" : "flex-row"
       }`}
     >
+      {/* Avatar */}
       <div
-        className={`flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-2xl flex items-center justify-center mt-1 animate-scale-in shadow-md transition-all duration-300 hover:scale-110 hover:rotate-3 ${
+        className={`flex-shrink-0 w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center mt-1 transition-all duration-200 ${
           isUser
-            ? "bg-linear-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 border border-[var(--border)] text-[var(--foreground)]"
-            : "bg-linear-to-br from-indigo-500 via-indigo-600 to-violet-700 text-white shadow-lg shadow-indigo-500/25"
+            ? "bg-muted text-muted-foreground border border-border/60"
+            : "bg-primary/10 text-primary"
         }`}
       >
         {isUser ? (
-          <User size={18} className="md:w-5 md:h-5" />
+          <User size={14} className="md:w-4 md:h-4" />
         ) : (
           <Bot
-            size={18}
-            className={`md:w-5 md:h-5 ${
+            size={14}
+            className={`md:w-4 md:h-4 ${
               isStreaming ? "animate-pulse" : ""
             }`}
           />
         )}
       </div>
 
-      <div className={`flex flex-col gap-2 max-w-[85%] md:max-w-[80%] ${isUser ? "items-end" : "items-start"}`}>
+      {/* Message content */}
+      <div className={`flex flex-col gap-1.5 max-w-[85%] md:max-w-[80%] ${isUser ? "items-end" : "items-start"}`}>
         <div
-          className={`relative px-4 md:px-6 py-3 md:py-4 transition-all duration-300 shadow-sm ${
+          className={`relative px-4 py-3 transition-all duration-200 ${
             isUser
-              ? "bg-linear-to-br from-indigo-600 via-indigo-700 to-violet-800 text-white rounded-3xl rounded-tr-none hover:shadow-lg hover:shadow-indigo-500/20"
-              : "backdrop-blur-md bg-white/90 dark:bg-slate-900/90 text-[var(--assistant-bubble-text)] rounded-3xl rounded-tl-none border border-[var(--border)]/80 hover:shadow-lg hover:border-[var(--border)]"
+              ? "bg-primary text-white rounded-2xl rounded-tr-sm"
+              : "bg-card border border-border/60 text-card-foreground rounded-2xl rounded-tl-sm"
           }`}
         >
           {isUser ? (
-            <p className="whitespace-pre-wrap leading-relaxed text-[0.9375rem] font-medium">{content}</p>
+            <p className="whitespace-pre-wrap leading-relaxed text-[0.9rem]">{content}</p>
           ) : (
             <div className="prose max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 dark:prose-invert">
               <ReactMarkdown
@@ -81,7 +83,7 @@ const MessageBubble = memo(function MessageBubble({
                     if (!match) {
                       return (
                         <code
-                          className="px-1.5 py-0.5 rounded-md bg-[var(--primary)]/10 text-[var(--primary)] text-[0.875em] font-semibold font-mono"
+                          className="px-1.5 py-0.5 rounded-md bg-primary/8 text-primary text-[0.85em] font-medium font-mono"
                           {...props}
                         >
                           {children}
@@ -93,8 +95,8 @@ const MessageBubble = memo(function MessageBubble({
                   },
                   table({ children }) {
                     return (
-                      <div className="overflow-x-auto my-4 rounded-xl border border-[var(--border)] shadow-xs">
-                        <table className="min-w-full divide-y divide-[var(--border)] m-0">
+                      <div className="overflow-x-auto my-4 rounded-lg border border-border">
+                        <table className="min-w-full divide-y divide-border m-0">
                           {children}
                         </table>
                       </div>
@@ -108,38 +110,39 @@ const MessageBubble = memo(function MessageBubble({
                 {content}
               </ReactMarkdown>
               {isStreaming && (
-                <div className="flex gap-1 mt-2 items-center h-5">
-                  <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-typing-dot" />
-                  <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-typing-dot animation-delay-150" />
-                  <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-typing-dot animation-delay-300" />
+                <div className="flex gap-1 mt-2 items-center h-4">
+                  <span className="w-1.5 h-1.5 bg-primary rounded-full animate-typing-dot" />
+                  <span className="w-1.5 h-1.5 bg-primary rounded-full animate-typing-dot animation-delay-150" />
+                  <span className="w-1.5 h-1.5 bg-primary rounded-full animate-typing-dot animation-delay-300" />
                 </div>
               )}
             </div>
           )}
         </div>
 
+        {/* Action buttons */}
         <div
-          className={`flex gap-1.5 md:gap-2 transition-opacity duration-300 opacity-0 group-hover:opacity-100 ${
+          className={`flex gap-1 transition-opacity duration-200 opacity-0 group-hover:opacity-100 ${
             isUser ? "flex-row-reverse" : "flex-row"
           }`}
         >
           <button
             onClick={handleCopy}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 border ${
+            className={`flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium transition-all duration-200 ${
               copied
-                ? "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20"
-                : "text-muted-foreground hover:text-foreground bg-white/50 dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 border-[var(--border)]/50 shadow-xs"
-            } backdrop-blur-sm`}
+                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
             title="Copy message"
           >
             {copied ? (
-              <span className="flex items-center gap-1.5">
-                <Check size={14} className="animate-scale-in" />
-                <span className="hidden sm:inline animate-fade-in">Copied</span>
+              <span className="flex items-center gap-1">
+                <Check size={12} className="animate-scale-in" />
+                <span className="hidden sm:inline">Copied</span>
               </span>
             ) : (
               <>
-                <Copy size={14} />
+                <Copy size={12} />
                 <span className="hidden sm:inline">Copy</span>
               </>
             )}
@@ -148,11 +151,11 @@ const MessageBubble = memo(function MessageBubble({
           {showRegenerate && onRegenerate && (
             <button
               onClick={onRegenerate}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground bg-white/50 dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 backdrop-blur-sm transition-all duration-200 border border-[var(--border)]/50 shadow-xs"
+              className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200"
               title="Regenerate response"
             >
-              <RotateCcw size={14} />
-              <span className="hidden sm:inline">Regenerate</span>
+              <RotateCcw size={12} />
+              <span className="hidden sm:inline">Retry</span>
             </button>
           )}
         </div>
