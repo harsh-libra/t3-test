@@ -5,6 +5,7 @@ import { useChat } from "@ai-sdk/react";
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 import ModelSelector from "./ModelSelector";
+import { useToast } from "./Toast";
 import { MessageSquarePlus, Loader2, Menu, AlertTriangle, ArrowDown, Plus, Sparkles, Wand2, Code2, BookOpen, Lightbulb, PenLine, BarChart3 } from "lucide-react";
 import type { Conversation } from "@/types";
 
@@ -30,6 +31,7 @@ export default function ChatWindow({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const { addToast } = useToast();
 
   // Persist provider/model selection
   const [selectedProvider, setSelectedProvider] = useState<string>(() => {
