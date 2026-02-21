@@ -74,16 +74,6 @@ export default function Sidebar({
         />
       )}
 
-      {/* Mobile hamburger button */}
-      <button
-        onClick={onToggle}
-        className="fixed top-3 left-3 z-50 p-2 rounded-lg bg-card border border-border text-foreground md:hidden"
-        style={{ boxShadow: "var(--shadow-md)" }}
-        aria-label="Toggle sidebar"
-      >
-        {isOpen ? <X size={20} /> : <Menu size={20} />}
-      </button>
-
       {/* Sidebar */}
       <aside
         className={`fixed md:relative z-40 h-full flex flex-col bg-sidebar-bg border-r border-sidebar-border transition-all duration-300 ease-in-out transition-theme ${

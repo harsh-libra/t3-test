@@ -44,11 +44,13 @@
 :root {
   /* Backgrounds */
   --background: #fafbfc;
+  --background-rgb: 250, 251, 252;
   --foreground: #111827;
   --muted: #f1f3f5;
   --muted-foreground: #6b7280;
   --border: #e5e7eb;
   --card: #ffffff;
+  --card-rgb: 255, 255, 255;
   --card-foreground: #111827;
 
   /* Primary — refined indigo */
@@ -94,14 +96,16 @@
 
 /* ─── Dark Theme ─── */
 .dark {
-  /* Backgrounds — softer, with blue undertones */
-  --background: #12121a;
-  --foreground: #f0f0f4;
-  --muted: #1e1e2a;
-  --muted-foreground: #9ca3b0;
-  --border: #2a2a3a;
-  --card: #1a1a26;
-  --card-foreground: #f0f0f4;
+  /* Backgrounds — deeper, richer slate */
+  --background: #020617;
+  --background-rgb: 2, 6, 23;
+  --foreground: #f8fafc;
+  --muted: #0f172a;
+  --muted-foreground: #94a3b8;
+  --border: #1e293b;
+  --card: #0f172a;
+  --card-rgb: 15, 23, 42;
+  --card-foreground: #f8fafc;
 
   /* Primary — brighter for dark bg */
   --primary: #818cf8;
@@ -340,4 +344,40 @@ body {
 /* ─── Smooth Transitions ─── */
 .transition-theme {
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* ─── Utility Classes ─── */
+.glass-effect {
+  background: rgba(var(--background-rgb), 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.glass-card {
+  background: rgba(var(--card-rgb), 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .glass-card {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

@@ -5,7 +5,17 @@ import { useChat } from "@ai-sdk/react";
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 import ModelSelector from "./ModelSelector";
-import { MessageSquarePlus, Loader2, Menu, AlertTriangle } from "lucide-react";
+import {
+  MessageSquarePlus,
+  Loader2,
+  Menu,
+  AlertTriangle,
+  Sparkles,
+  Code,
+  Lightbulb,
+  Zap,
+  RefreshCcw,
+} from "lucide-react";
 import type { Conversation } from "@/types";
 
 interface ChatWindowProps {
@@ -65,6 +75,7 @@ export default function ChatWindow({
     stop,
     setMessages,
     error,
+    reload,
   } = useChat({
     api: "/api/chat",
     body: {
@@ -128,17 +139,17 @@ export default function ChatWindow({
     <div className="flex flex-col h-full">
       {/* Header */}
       <div
-        className="flex items-center justify-between px-5 md:px-6 py-3.5 border-b border-border bg-background"
+        className="flex items-center justify-between px-4 md:px-6 py-3 border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-30"
         style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}
       >
-        <div className="flex items-center gap-4">
-          {/* Sidebar toggle for desktop */}
+        <div className="flex items-center gap-2 md:gap-4">
+          {/* Sidebar toggle for both mobile and desktop */}
           <button
             onClick={onToggleSidebar}
-            className="hidden md:flex p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            className="flex p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
             aria-label="Toggle sidebar"
           >
-            <Menu size={18} />
+            <Menu size={20} className="md:w-[18px] md:h-[18px]" />
           </button>
           <ModelSelector
             selectedProvider={selectedProvider}
@@ -148,7 +159,7 @@ export default function ChatWindow({
         </div>
         <button
           onClick={onNewChat}
-          className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted border border-transparent hover:border-border transition-all"
+          className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted border border-transparent hover:border-border transition-all"
           aria-label="New chat"
         >
           <MessageSquarePlus size={18} />
@@ -178,24 +189,36 @@ export default function ChatWindow({
               Start a conversation with any AI model. Select your preferred
               provider and model from the dropdown above.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-lg">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-lg w-full">
               {[
-                { text: "Explain quantum computing", icon: "🔬" },
-                { text: "Write a Python script", icon: "🐍" },
-                { text: "Help me brainstorm ideas", icon: "💡" },
+                {
+                  text: "Explain quantum computing",
+                  icon: <Zap size={18} className="text-amber-500" />,
+                },
+                {
+                  text: "Write a Python script",
+                  icon: <Code size={18} className="text-blue-500" />,
+                },
+                {
+                  text: "Help me brainstorm ideas",
+                  icon: <Lightbulb size={18} className="text-emerald-500" />,
+                },
               ].map((suggestion) => (
                 <button
                   key={suggestion.text}
                   onClick={() => {
                     setInput(suggestion.text);
                   }}
-                  className="p-4 rounded-xl border border-border bg-card text-card-foreground hover:bg-muted transition-all text-sm text-left hover:border-[var(--primary)]/30"
+                  className="p-4 rounded-xl border border-border bg-card text-card-foreground hover:bg-muted transition-all text-sm text-left hover:border-[var(--primary)]/30 group relative"
                   style={{ boxShadow: "var(--shadow-sm)" }}
                 >
-                  <span className="text-xl mb-2 block">
+                  <div className="mb-3 p-2 rounded-lg bg-muted group-hover:bg-background transition-colors w-fit">
                     {suggestion.icon}
-                  </span>
+                  </div>
                   <span className="font-medium">{suggestion.text}</span>
+                  <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Sparkles size={14} className="text-primary" />
+                  </div>
                 </button>
               ))}
             </div>
@@ -217,20 +240,23 @@ export default function ChatWindow({
             {isLoading &&
               messages.length > 0 &&
               messages[messages.length - 1].role === "user" && (
-                <div className="flex gap-3.5 py-5 px-4 md:px-0">
-                  <div className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center bg-primary text-white mt-1">
-                    <Loader2 size={18} className="animate-spin" />
+                <div className="flex gap-3.5 py-4 px-4 md:px-0 animate-slide-up">
+                  <div
+                    className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-white mt-1"
+                    style={{ background: "var(--gradient-primary)" }}
+                  >
+                    <Sparkles size={18} className="animate-pulse" />
                   </div>
-                  <div className="rounded-2xl rounded-bl-md bg-assistant-bubble px-5 py-3.5 border border-[var(--border)]/50">
+                  <div className="rounded-2xl rounded-tl-sm bg-[var(--assistant-bubble)] px-5 py-3.5 border border-[var(--border)]/50 shadow-sm">
                     <div className="flex items-center gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-muted-foreground/60 animate-bounce" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary)] animate-bounce" />
                       <span
-                        className="w-2.5 h-2.5 rounded-full bg-muted-foreground/60 animate-bounce"
-                        style={{ animationDelay: "0.1s" }}
+                        className="w-1.5 h-1.5 rounded-full bg-[var(--primary)] animate-bounce"
+                        style={{ animationDelay: "0.2s" }}
                       />
                       <span
-                        className="w-2.5 h-2.5 rounded-full bg-muted-foreground/60 animate-bounce"
-                        style={{ animationDelay: "0.2s" }}
+                        className="w-1.5 h-1.5 rounded-full bg-[var(--primary)] animate-bounce"
+                        style={{ animationDelay: "0.4s" }}
                       />
                     </div>
                   </div>
@@ -238,17 +264,28 @@ export default function ChatWindow({
               )}
             {error && (
               <div
-                className="mx-4 md:mx-0 p-5 rounded-2xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-sm"
+                className="mx-4 md:mx-0 p-5 rounded-2xl bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 text-red-700 dark:text-red-400 text-sm animate-fade-in"
                 style={{ boxShadow: "var(--shadow-sm)" }}
               >
                 <div className="flex items-start gap-3">
-                  <AlertTriangle size={18} className="flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-semibold mb-1">Error</p>
-                    <p className="leading-relaxed">
-                      {error.message ||
-                        "Something went wrong. Please try again."}
+                  <div className="p-2 rounded-lg bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400">
+                    <AlertTriangle size={18} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-bold text-red-800 dark:text-red-300 mb-1">
+                      Something went wrong
                     </p>
+                    <p className="leading-relaxed mb-4 opacity-90">
+                      {error.message ||
+                        "An error occurred while communicating with the AI. This might be due to a rate limit or connection issue."}
+                    </p>
+                    <button
+                      onClick={() => reload()}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 dark:bg-red-700 text-white font-medium hover:bg-red-700 dark:hover:bg-red-600 transition-colors shadow-sm"
+                    >
+                      <RefreshCcw size={16} />
+                      Retry Request
+                    </button>
                   </div>
                 </div>
               </div>
