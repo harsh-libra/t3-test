@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import ChatWindow from "@/components/ChatWindow";
 import Sidebar from "@/components/Sidebar";
 import KeyboardShortcuts from "@/components/KeyboardShortcuts";
@@ -106,6 +106,20 @@ export default function Home() {
     setSidebarOpen((prev) => !prev);
   }, []);
 
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFocusSearch = useCallback(() => {
+    if (!sidebarOpen) {
+      setSidebarOpen(true);
+      // Wait for sidebar animation/mount before focusing
+      requestAnimationFrame(() => {
+        searchInputRef.current?.focus();
+      });
+    } else {
+      searchInputRef.current?.focus();
+    }
+  }, [sidebarOpen]);
+
   // Avoid hydration mismatch — don't render until mounted
   if (!mounted) {
     return (
@@ -128,6 +142,7 @@ export default function Home() {
       <KeyboardShortcuts
         onNewChat={handleNewChat}
         onToggleSidebar={handleToggleSidebar}
+        onFocusSearch={handleFocusSearch}
       />
 
       {/* Sidebar */}
@@ -139,6 +154,7 @@ export default function Home() {
         onDeleteConversation={handleDeleteConversation}
         isOpen={sidebarOpen}
         onToggle={handleToggleSidebar}
+        searchInputRef={searchInputRef}
       />
 
       {/* Chat area */}

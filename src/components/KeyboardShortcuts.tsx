@@ -5,11 +5,13 @@ import { useEffect } from "react";
 interface KeyboardShortcutsProps {
   onNewChat: () => void;
   onToggleSidebar: () => void;
+  onFocusSearch?: () => void;
 }
 
 export default function KeyboardShortcuts({
   onNewChat,
   onToggleSidebar,
+  onFocusSearch,
 }: KeyboardShortcutsProps) {
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -32,11 +34,17 @@ export default function KeyboardShortcuts({
         e.preventDefault();
         onToggleSidebar();
       }
+
+      // Cmd/Ctrl + Shift + F — Focus search
+      if (isMod && e.shiftKey && e.key === "F") {
+        e.preventDefault();
+        onFocusSearch?.();
+      }
     }
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onNewChat, onToggleSidebar]);
+  }, [onNewChat, onToggleSidebar, onFocusSearch]);
 
   return null;
 }
