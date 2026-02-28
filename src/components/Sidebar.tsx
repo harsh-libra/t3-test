@@ -11,6 +11,7 @@ import {
   Cpu,
   Zap,
   Keyboard,
+  Search,
 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import type { Conversation } from "@/types";
@@ -38,6 +39,33 @@ function ProviderBadge({ providerId }: { providerId: string }) {
   }
 }
 
+function groupConversationsByDate(convs: Conversation[]) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const lastWeek = new Date(today);
+  lastWeek.setDate(lastWeek.getDate() - 7);
+
+  const groups: { label: string; convs: Conversation[] }[] = [
+    { label: "Today", convs: [] },
+    { label: "Yesterday", convs: [] },
+    { label: "Last 7 Days", convs: [] },
+    { label: "Older", convs: [] },
+  ];
+
+  for (const conv of convs) {
+    const d = new Date(conv.updatedAt);
+    d.setHours(0, 0, 0, 0);
+    if (d >= today) groups[0].convs.push(conv);
+    else if (d >= yesterday) groups[1].convs.push(conv);
+    else if (d >= lastWeek) groups[2].convs.push(conv);
+    else groups[3].convs.push(conv);
+  }
+
+  return groups.filter((g) => g.convs.length > 0);
+}
+
 function formatTimeAgo(timestamp: number): string {
   const now = Date.now();
   const diff = now - timestamp;
@@ -63,6 +91,12 @@ export default function Sidebar({
 }: SidebarProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredConversations = conversations.filter((c) =>
+    c.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const groupedConversations = groupConversationsByDate(filteredConversations);
 
   return (
     <>
@@ -119,8 +153,8 @@ export default function Sidebar({
             </div>
           </div>
 
-          {/* New Chat button */}
-          <div className="px-4 py-3">
+          {/* New Chat button + Search */}
+          <div className="px-4 py-3 space-y-2.5">
             <button
               onClick={() => {
                 onNewChat();
@@ -137,6 +171,21 @@ export default function Sidebar({
                 ⌘K
               </kbd>
             </button>
+
+            {/* Search input */}
+            <div className="relative">
+              <Search
+                size={15}
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] pointer-events-none"
+              />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search conversations..."
+                className="w-full pl-8 pr-3 py-2 text-sm rounded-lg bg-[var(--muted)] border border-transparent focus:border-[var(--input-border)] focus:outline-none focus:ring-1 focus:ring-[var(--ring)] transition-all text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+              />
+            </div>
           </div>
 
           {/* Conversation list */}
@@ -150,56 +199,70 @@ export default function Sidebar({
                 <p className="font-medium">No conversations yet</p>
                 <p className="text-xs mt-1.5 opacity-75">Start a new chat to begin</p>
               </div>
+            ) : searchQuery && filteredConversations.length === 0 ? (
+              <div className="text-center py-8 text-[var(--muted-foreground)] text-sm">
+                <Search size={28} className="mx-auto mb-2 opacity-40" />
+                <p>No results for &ldquo;{searchQuery}&rdquo;</p>
+              </div>
             ) : (
-              <div className="space-y-1.5">
-                {conversations.map((conv) => {
-                  const isActive = conv.id === currentConversationId;
-                  const isHovered = conv.id === hoveredId;
+              <div>
+                {groupedConversations.map((group, groupIdx) => (
+                  <div key={group.label}>
+                    <p className={`px-3 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--muted-foreground)]/70 ${groupIdx === 0 ? "mt-1" : "mt-3"}`}>
+                      {group.label}
+                    </p>
+                    <div className="space-y-1.5">
+                      {group.convs.map((conv) => {
+                        const isActive = conv.id === currentConversationId;
+                        const isHovered = conv.id === hoveredId;
 
-                  return (
-                    <div
-                      key={conv.id}
-                      className={`group relative flex items-center rounded-xl cursor-pointer transition-all ${
-                        isActive
-                          ? "bg-[var(--accent)] text-[var(--accent-foreground)] border-l-2 border-l-[var(--primary)]"
-                          : "hover:bg-[var(--muted)] text-[var(--foreground)] border-l-2 border-l-transparent"
-                      }`}
-                      onMouseEnter={() => setHoveredId(conv.id)}
-                      onMouseLeave={() => setHoveredId(null)}
-                      onClick={() => {
-                        onSelectConversation(conv.id);
-                        if (window.innerWidth < 768) onToggle();
-                      }}
-                    >
-                      <div className="flex-1 min-w-0 px-3.5 py-3">
-                        <div className="flex items-center gap-2">
-                          <ProviderBadge providerId={conv.provider} />
-                          <p className="text-sm font-medium truncate">
-                            {conv.title}
-                          </p>
-                        </div>
-                        <p className="text-xs text-[var(--muted-foreground)] mt-1 tracking-wide">
-                          {conv.messages.length} messages ·{" "}
-                          {formatTimeAgo(conv.updatedAt)}
-                        </p>
-                      </div>
+                        return (
+                          <div
+                            key={conv.id}
+                            className={`group relative flex items-center rounded-xl cursor-pointer transition-all ${
+                              isActive
+                                ? "bg-[var(--accent)] text-[var(--accent-foreground)] border-l-2 border-l-[var(--primary)]"
+                                : "hover:bg-[var(--muted)] text-[var(--foreground)] border-l-2 border-l-transparent"
+                            }`}
+                            onMouseEnter={() => setHoveredId(conv.id)}
+                            onMouseLeave={() => setHoveredId(null)}
+                            onClick={() => {
+                              onSelectConversation(conv.id);
+                              if (window.innerWidth < 768) onToggle();
+                            }}
+                          >
+                            <div className="flex-1 min-w-0 px-3.5 py-3">
+                              <div className="flex items-center gap-2">
+                                <ProviderBadge providerId={conv.provider} />
+                                <p className="text-sm font-medium truncate">
+                                  {conv.title}
+                                </p>
+                              </div>
+                              <p className="text-xs text-[var(--muted-foreground)] mt-1 tracking-wide">
+                                {conv.messages.length} messages ·{" "}
+                                {formatTimeAgo(conv.updatedAt)}
+                              </p>
+                            </div>
 
-                      {/* Delete button */}
-                      {(isHovered || isActive) && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onDeleteConversation(conv.id);
-                          }}
-                          className="flex-shrink-0 p-2 mr-2 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--destructive)] hover:bg-[var(--muted)] transition-colors"
-                          aria-label="Delete conversation"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      )}
+                            {/* Delete button */}
+                            {(isHovered || isActive) && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onDeleteConversation(conv.id);
+                                }}
+                                className="flex-shrink-0 p-2 mr-2 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--destructive)] hover:bg-[var(--muted)] transition-colors"
+                                aria-label="Delete conversation"
+                              >
+                                <Trash2 size={14} />
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
               </div>
             )}
           </div>

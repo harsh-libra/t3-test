@@ -67,13 +67,24 @@ export default function ChatInput({
             placeholder={placeholder}
             rows={1}
             disabled={isLoading}
-            className="w-full resize-none rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-5 py-3.5 pr-5 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full resize-none rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] px-5 py-3.5 pr-5 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]/60 focus:border-[var(--ring)]/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
               minHeight: "52px",
               maxHeight: "200px",
               boxShadow: "var(--shadow-sm)",
             }}
           />
+          {input.length > 200 && (
+            <span
+              className={`absolute bottom-2.5 right-3 text-[10px] pointer-events-none ${
+                input.length > 2000
+                  ? "text-[var(--destructive)]"
+                  : "text-[var(--muted-foreground)]"
+              }`}
+            >
+              {input.length}
+            </span>
+          )}
         </div>
 
         {isLoading ? (
@@ -89,7 +100,7 @@ export default function ChatInput({
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="flex-shrink-0 p-3.5 rounded-2xl bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex-shrink-0 p-3.5 rounded-2xl bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed transform active:scale-95"
             style={{
               boxShadow: input.trim()
                 ? "0 2px 8px rgba(79, 70, 229, 0.2)"
