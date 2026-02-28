@@ -109,21 +109,43 @@ export default function Home() {
   // Avoid hydration mismatch — don't render until mounted
   if (!mounted) {
     return (
-      <main className="h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center animate-pulse">
-            <span className="text-white text-lg font-bold">T3</span>
+      <main className="h-screen flex bg-background overflow-hidden">
+        {/* Sidebar skeleton */}
+        <div className="hidden md:flex w-80 flex-col bg-sidebar-bg border-r border-sidebar-border">
+          <div className="px-5 py-4 border-b border-[var(--sidebar-border)] flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-[var(--muted)] animate-pulse" />
+            <div className="h-5 w-20 rounded bg-[var(--muted)] animate-pulse" />
           </div>
-          <p className="text-muted-foreground text-sm animate-pulse">
-            Loading T3 Chat...
-          </p>
+          <div className="px-4 py-3">
+            <div className="h-11 rounded-xl bg-[var(--muted)] animate-pulse" />
+          </div>
+          <div className="px-3 space-y-2 mt-1">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-14 rounded-xl bg-[var(--muted)] animate-pulse opacity-70"
+                style={{ animationDelay: `${i * 0.1}s` }}
+              />
+            ))}
+          </div>
+        </div>
+        {/* Chat area skeleton */}
+        <div className="flex-1 flex flex-col">
+          <div className="h-14 border-b border-border bg-background animate-pulse" />
+          <div className="flex-1 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-14 h-14 rounded-2xl bg-[var(--muted)] animate-pulse" />
+              <div className="h-4 w-32 rounded bg-[var(--muted)] animate-pulse" />
+            </div>
+          </div>
+          <div className="h-20 border-t border-border bg-background animate-pulse" />
         </div>
       </main>
     );
   }
 
   return (
-    <main className="h-screen flex bg-background overflow-hidden">
+    <main className="h-screen flex bg-background overflow-hidden animate-fade-in-up">
       {/* Keyboard shortcuts handler */}
       <KeyboardShortcuts
         onNewChat={handleNewChat}

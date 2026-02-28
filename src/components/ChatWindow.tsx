@@ -5,7 +5,7 @@ import { useChat } from "@ai-sdk/react";
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 import ModelSelector from "./ModelSelector";
-import { MessageSquarePlus, Loader2, Menu, AlertTriangle } from "lucide-react";
+import { MessageSquarePlus, Loader2, Menu, AlertTriangle, MessageCircle, ChevronDown } from "lucide-react";
 import type { Conversation } from "@/types";
 
 interface ChatWindowProps {
@@ -29,6 +29,7 @@ export default function ChatWindow({
 }: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showScrollButton, setShowScrollButton] = useState<boolean>(false);
 
   // Persist provider/model selection
   const [selectedProvider, setSelectedProvider] = useState<string>(() => {
@@ -119,9 +120,22 @@ export default function ChatWindow({
     }
   }, [conversation?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Scroll-to-bottom button visibility
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      setShowScrollButton(scrollHeight - scrollTop - clientHeight > 200);
+    };
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    setShowScrollButton(false);
   }, [messages]);
 
   return (
@@ -157,47 +171,83 @@ export default function ChatWindow({
       </div>
 
       {/* Messages area */}
-      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto">
+      <div className="flex-1 relative overflow-hidden">
+      <div ref={scrollContainerRef} className="h-full overflow-y-auto">
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center px-4">
-            <div
-              className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 relative"
-              style={{ background: "var(--gradient-primary)" }}
-            >
-              {/* Soft glow behind icon */}
-              <div
-                className="absolute inset-0 rounded-2xl opacity-30 blur-xl"
-                style={{ background: "var(--gradient-primary)" }}
-              />
-              <MessageSquarePlus size={38} className="text-white relative z-10" />
-            </div>
-            <h2 className="text-2xl font-bold text-foreground mb-3 tracking-tight">
-              T3 Chat
-            </h2>
-            <p className="text-muted-foreground max-w-md mb-8 leading-relaxed">
-              Start a conversation with any AI model. Select your preferred
-              provider and model from the dropdown above.
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-lg">
-              {[
-                { text: "Explain quantum computing", icon: "🔬" },
-                { text: "Write a Python script", icon: "🐍" },
-                { text: "Help me brainstorm ideas", icon: "💡" },
-              ].map((suggestion) => (
-                <button
-                  key={suggestion.text}
-                  onClick={() => {
-                    setInput(suggestion.text);
+          <div className="flex flex-col items-center justify-center h-full text-center px-4 py-16">
+            <div className="max-w-2xl mx-auto w-full flex flex-col items-center">
+              {/* Logo treatment: stacked gradient circles with ping ring */}
+              <div className="relative flex items-center justify-center mb-8">
+                {/* Animated ping ring */}
+                <span
+                  className="absolute inline-flex rounded-full opacity-20 animate-ping"
+                  style={{
+                    width: "88px",
+                    height: "88px",
+                    background: "var(--gradient-primary)",
                   }}
-                  className="p-4 rounded-xl border border-border bg-card text-card-foreground hover:bg-muted transition-all text-sm text-left hover:border-[var(--primary)]/30"
-                  style={{ boxShadow: "var(--shadow-sm)" }}
+                />
+                {/* Outer circle */}
+                <div
+                  className="w-20 h-20 rounded-full flex items-center justify-center relative"
+                  style={{ background: "var(--gradient-primary)", boxShadow: "var(--shadow-md)" }}
                 >
-                  <span className="text-xl mb-2 block">
-                    {suggestion.icon}
-                  </span>
-                  <span className="font-medium">{suggestion.text}</span>
-                </button>
-              ))}
+                  {/* Inner circle */}
+                  <div
+                    className="w-12 h-12 rounded-full flex items-center justify-center"
+                    style={{ background: "rgba(255,255,255,0.20)" }}
+                  >
+                    <MessageCircle size={26} className="text-white" fill="white" />
+                  </div>
+                </div>
+              </div>
+
+              <h2 className="text-2xl font-bold text-foreground mb-3 tracking-tight">
+                How can I help you today?
+              </h2>
+              <p className="text-sm text-muted-foreground max-w-sm mx-auto mb-10 leading-relaxed">
+                Select a suggestion below or type anything to get started.
+              </p>
+
+              {/* 2×3 suggestion grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full">
+                {[
+                  { icon: "🔬", text: "Explain a concept", desc: "Break down any topic simply" },
+                  { icon: "🐍", text: "Write code", desc: "Generate scripts in any language" },
+                  { icon: "💡", text: "Brainstorm ideas", desc: "Explore creative directions" },
+                  { icon: "🐛", text: "Debug my code", desc: "Paste code and get fixes fast" },
+                  { icon: "✍️", text: "Draft a message", desc: "Emails, docs, and more" },
+                  { icon: "📊", text: "Analyze data", desc: "Interpret results & trends" },
+                ].map((suggestion) => (
+                  <button
+                    key={suggestion.text}
+                    onClick={() => {
+                      setInput(suggestion.text);
+                      setTimeout(() => {
+                        document.querySelector("textarea")?.focus();
+                      }, 0);
+                    }}
+                    className="p-4 rounded-xl border border-border bg-card text-card-foreground text-left transition-all duration-200 ring-1 ring-[var(--primary)]/20 hover:ring-[var(--primary)]/60 hover:bg-muted"
+                    style={{ boxShadow: "var(--shadow-sm)" }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLButtonElement).style.boxShadow = "var(--shadow-md)";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLButtonElement).style.boxShadow = "var(--shadow-sm)";
+                    }}
+                  >
+                    <span className="block mb-2" style={{ fontSize: "1.5rem" }}>
+                      {suggestion.icon}
+                    </span>
+                    <span className="block font-semibold text-sm text-foreground mb-0.5">
+                      {suggestion.text}
+                    </span>
+                    <span className="block text-xs text-muted-foreground leading-snug">
+                      {suggestion.desc}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         ) : (
@@ -256,6 +306,16 @@ export default function ChatWindow({
             <div ref={messagesEndRef} className="h-4" />
           </div>
         )}
+      </div>
+      {showScrollButton && (
+        <button
+          onClick={() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })}
+          className="absolute bottom-4 right-4 z-10 p-2.5 rounded-full bg-[var(--primary)] text-white shadow-lg hover:opacity-90 transition-all animate-in fade-in slide-in-from-bottom-2 duration-200"
+          aria-label="Scroll to bottom"
+        >
+          <ChevronDown size={20} />
+        </button>
+      )}
       </div>
 
       {/* Input area */}
